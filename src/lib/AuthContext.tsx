@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import {
+  ADMIN_LOGIN_EMAIL,
   isSupabaseConfigured,
   supabase,
   SUPABASE_NOT_CONFIGURED_MESSAGE,
@@ -8,16 +9,17 @@ import {
 } from './supabase';
 
 /**
- * Authentification administrateur — Supabase Auth.
+ * Authentification administrateur — MOT DE PASSE UNIQUEMENT (côté écran).
  *
- * Sécurité (remplace l'ancien mot de passe partagé codé dans Firebase) :
- *  1. L'admin se connecte avec un compte créé dans Supabase
- *     (Dashboard → Authentication → Users → Add user).
- *  2. Son email doit figurer dans la table « admin_users » : c'est elle
- *     qui autorise les écritures (politiques RLS `public.is_admin()`).
- *     Un compte connecté mais absent de cette table n'est PAS admin.
- *  3. Désactivez les inscriptions publiques dans Supabase pour qu'un
- *     visiteur ne puisse pas créer de compte (voir SUPABASE_SETUP.md).
+ * L'administrateur saisit seulement son mot de passe, sans email.
+ * En coulisses, ce mot de passe ouvre une vraie session Supabase Auth sur le
+ * compte administrateur technique (ADMIN_LOGIN_EMAIL, jamais affiché) :
+ * la sécurité reste donc celle de Supabase (mot de passe chiffré chez
+ * Supabase, limitation des tentatives, politiques RLS `public.is_admin()`).
+ *
+ * Le mot de passe n'est JAMAIS écrit dans le code : il se définit une seule
+ * fois dans Supabase → Authentication → Users (voir SUPABASE_SETUP.md).
+ * L'email du compte doit figurer dans la table « admin_users ».
  */
 
 interface AuthContextType {
@@ -30,7 +32,7 @@ interface AuthContextType {
   isLoading: boolean;
   isSupabaseConfigured: boolean;
   login: (email: string, pass: string) => Promise<{ success: boolean; error?: string }>;
-  /** @deprecated Ancien accès par mot de passe seul (Firebase). Utilisez login(email, motDePasse). */
+  /** Connexion admin par mot de passe uniquement (écran /admin, sans email). */
   loginWithPassword: (pass: string) => Promise<{ success: boolean; error?: string }>;
   loginWithGoogle: () => Promise<{ success: boolean; error?: string }>;
   logout: () => Promise<void>;
@@ -41,7 +43,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 function translateAuthError(err: any): string {
   const msg = String(err?.message || err || '');
   if (/Invalid login credentials/i.test(msg)) {
-    return 'Identifiants invalides. Vérifiez l’adresse email et le mot de passe du compte administrateur créé dans Supabase.';
+    return 'Mot de passe incorrect. Il doit correspondre exactement au mot de passe du compte administrateur créé dans Supabase (Authentication → Users).';
   }
   if (/Email not confirmed/i.test(msg)) {
     return 'Adresse email non confirmée. Dans Supabase (Authentication → Users), confirmez le compte ou recréez-le avec « Auto Confirm User » coché.';
@@ -51,7 +53,7 @@ function translateAuthError(err: any): string {
   if (/Failed to fetch|NetworkError/i.test(msg)) return 'Impossible de contacter Supabase. Vérifiez votre connexion et VITE_SUPABASE_URL.';
   if (/Invalid API key/i.test(msg)) return 'Clé Supabase invalide : vérifiez VITE_SUPABASE_ANON_KEY.';
   if (/provider is not enabled|Unsupported provider/i.test(msg)) {
-    return 'La connexion Google n’est pas activée dans Supabase (Authentication → Providers → Google). Utilisez l’email + mot de passe.';
+    return 'La connexion Google n’est pas activée dans Supabase (Authentication → Providers → Google). Utilisez le mot de passe administrateur.';
   }
   return msg || 'Échec de la connexion.';
 }
@@ -131,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const email = emailInput.trim().toLowerCase();
     const password = passInput ?? '';
     if (!email || !password) {
-      return { success: false, error: 'Veuillez saisir votre adresse email et votre mot de passe.' };
+      return { success: false, error: 'Veuillez saisir le mot de passe administrateur.' };
     }
     setIsLoading(true);
     try {
@@ -148,12 +150,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const loginWithPassword = async (_pass: string) => {
-    return {
-      success: false,
-      error:
-        'La connexion par mot de passe seul a été remplacée par Supabase Auth : connectez-vous avec l’adresse email et le mot de passe du compte administrateur créé dans Supabase.',
-    };
+  const loginWithPassword = async (passInput: string) => {
+    // Mot de passe uniquement : l'email technique reste invisible.
+    return login(ADMIN_LOGIN_EMAIL, passInput ?? '');
   };
 
   const loginWithGoogle = async () => {

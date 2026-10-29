@@ -25,6 +25,18 @@ const supabaseAnonKey = (
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
+/**
+ * Compte administrateur Supabase Auth associé à la connexion "mot de passe
+ * uniquement" de l'espace admin. Cet email n'est JAMAIS demandé à l'écran :
+ * il sert uniquement, en coulisses, à ouvrir une session Supabase sécurisée.
+ * Le mot de passe, lui, n'existe que dans Supabase (jamais dans le code).
+ * Modifiable via VITE_ADMIN_EMAIL si le compte créé dans Supabase diffère.
+ */
+export const ADMIN_LOGIN_EMAIL = (
+  (import.meta.env.VITE_ADMIN_EMAIL as string | undefined)?.trim().toLowerCase() ||
+  'admin@excellence-services-sarl.com'
+);
+
 export const SUPABASE_NOT_CONFIGURED_MESSAGE =
   "Supabase n'est pas encore configuré : ajoutez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (voir SUPABASE_SETUP.md), puis redéployez le site.";
 

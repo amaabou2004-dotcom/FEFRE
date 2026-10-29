@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Lock,
-  Mail,
   Eye,
   EyeOff,
-  Cloud,
   LayoutDashboard,
   Briefcase,
   Layers,
@@ -244,7 +242,7 @@ const SettingsEditor: React.FC = () => {
 };
 
 export const AdminPage: React.FC = () => {
-  const { isAdmin, isAuthenticated, login, loginWithGoogle, logout, currentUser } = useAuth();
+  const { isAdmin, isAuthenticated, loginWithPassword, logout, currentUser } = useAuth();
   const { currentPath, navigate } = useRouter();
   const {
     services,
@@ -288,8 +286,7 @@ export const AdminPage: React.FC = () => {
     resetToDefaults,
   } = useSiteData();
 
-  // Login form state (Supabase Auth : email + mot de passe)
-  const [email, setEmail] = useState('');
+  // Login form state (mot de passe uniquement, sans email)
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -334,24 +331,16 @@ export const AdminPage: React.FC = () => {
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
-    if (!email.trim() || !password.trim()) {
-      setLoginError('Veuillez saisir l’adresse email et le mot de passe du compte administrateur Supabase.');
+    if (!password.trim()) {
+      setLoginError('Veuillez saisir le mot de passe administrateur.');
       return;
     }
     setIsLoggingIn(true);
-    const res = await login(email, password);
+    const res = await loginWithPassword(password);
     setIsLoggingIn(false);
     if (!res.success) {
-      setLoginError(res.error || 'Connexion impossible. Veuillez vérifier vos identifiants Supabase.');
+      setLoginError(res.error || 'Mot de passe incorrect. Veuillez vérifier votre saisie.');
     }
-  };
-
-  const handleGoogleLogin = async () => {
-    setLoginError('');
-    setIsLoggingIn(true);
-    const res = await loginWithGoogle();
-    setIsLoggingIn(false);
-    if (!res.success) setLoginError(res.error || 'Connexion Google indisponible.');
   };
 
   const handleResetDefaults = async () => {
@@ -393,10 +382,40 @@ export const AdminPage: React.FC = () => {
               </h1>
               <p className="text-xs text-slate-500 dark:text-gray-400">Excellence Services SARL • Niamey, Niger</p>
               <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-slate-100 dark:bg-[#0A2254]/60 border border-slate-200 dark:border-[#D4AF37]/30 text-[10px] font-mono text-[#01184C] dark:text-[#D4AF37]">
-                <Cloud className="w-3 h-3 animate-pulse text-[#D4AF37]" />
-                <span>ACCÈS SÉCURISÉ CLOUD</span>
+                <Database className="w-3 h-3 animate-pulse text-[#D4AF37]" />
+                <span>ACCÈS PAR MOT DE PASSE • SUPABASE</span>
               </div>
             </div>
+
+            {!isSupabaseConfigured && (
+              <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/40 text-xs text-amber-800 dark:text-amber-200 space-y-1.5">
+                <p className="font-bold flex items-center gap-1.5">
+                  <AlertCircle className="w-4 h-4 shrink-0" /> Supabase n’est pas encore configuré sur ce site
+                </p>
+                <p>
+                  Ajoutez <code className="font-mono font-semibold">VITE_SUPABASE_URL</code> et{' '}
+                  <code className="font-mono font-semibold">VITE_SUPABASE_ANON_KEY</code>, exécutez le script SQL
+                  fourni, créez le compte admin avec votre mot de passe dans Supabase, puis redéployez. Guide :{' '}
+                  <strong>SUPABASE_SETUP.md</strong>.
+                </p>
+              </div>
+            )}
+
+            {isSupabaseConfigured && isAuthenticated && !isAdmin && (
+              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-500/40 text-xs text-red-700 dark:text-red-300 space-y-2">
+                <p>
+                  Mot de passe accepté, mais ce compte n’est pas reconnu administrateur : vérifiez qu’il figure dans
+                  la table <code className="font-mono">admin_users</code> de Supabase (guide SUPABASE_SETUP.md).
+                </p>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" /> Se déconnecter
+                </button>
+              </div>
+            )}
 
             {loginError && (
               <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-500/40 text-xs text-red-700 dark:text-red-300 flex items-start gap-2.5 shadow-sm">
@@ -408,28 +427,7 @@ export const AdminPage: React.FC = () => {
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
                 <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 dark:text-gray-300 mb-1.5">
-                  Adresse email administrateur
-                </label>
-                <div className="relative">
-                  <Mail className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400 dark:text-gray-400" />
-                  <input
-                    type="email"
-                    required
-                    autoFocus
-                    autoComplete="email"
-                    placeholder="admin@excellence-services-sarl.com"
-                    value={email}
-                    onChange={(e) => {
-                      setEmail(e.target.value);
-                      if (loginError) setLoginError('');
-                    }}
-                    className="w-full pl-10 pr-3 py-2.5 rounded-xl bg-slate-50 dark:bg-[#0A2254]/60 border border-slate-300 dark:border-white/10 text-xs text-[#0E1D38] dark:text-white placeholder-slate-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-[#D4AF37] focus:border-[#D4AF37] focus:outline-none transition-all"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 dark:text-gray-300 mb-1.5">
-                  Mot de passe Supabase
+                  Mot de passe administrateur
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400 dark:text-gray-400" />
@@ -437,6 +435,7 @@ export const AdminPage: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     required
                     autoFocus
+                    autoComplete="current-password"
                     placeholder="Saisissez votre mot de passe"
                     value={password}
                     onChange={(e) => {
@@ -468,9 +467,12 @@ export const AdminPage: React.FC = () => {
                       <span>Connexion en cours...</span>
                     </>
                   ) : (
-                    'Se connecter à la console'
+                    'Accéder à l’espace admin'
                   )}
                 </button>
+                <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-gray-500">
+                  Accès par mot de passe uniquement. Le mot de passe se configure une seule fois dans Supabase → Authentication → Users (guide SUPABASE_SETUP.md).
+                </p>
               </div>
 
               <div className="pt-1 text-center">
@@ -1144,7 +1146,7 @@ export const AdminPage: React.FC = () => {
                   <h4 className="font-bold text-[#D4AF37]">Supabase — mise en route (à faire une seule fois) :</h4>
                   <ol className="list-decimal pl-5 space-y-1 text-gray-200">
                     <li>Supabase → SQL Editor : exécuter le script <code className="font-mono text-[#D4AF37]">supabase/migrations/20261029120000_initial_schema.sql</code> (et y indiquer votre email admin).</li>
-                    <li>Supabase → Authentication → Users : créer le compte administrateur (même email, « Auto Confirm »), puis désactiver les inscriptions publiques.</li>
+                    <li>Supabase → Authentication → Users : créer le compte administrateur technique avec votre mot de passe (celui saisi ici, sans email à taper), puis désactiver les inscriptions publiques.</li>
                     <li>Hébergeur : renseigner <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_URL</code> et <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_ANON_KEY</code>, puis redéployer le site.</li>
                     <li>Connectez-vous ici : les contenus par défaut sont importés automatiquement dans Supabase. Détail complet dans le fichier SUPABASE_SETUP.md du projet.</li>
                   </ol>
