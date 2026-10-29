@@ -1,0 +1,18 @@
+{
+  "name": "excellence-services-cpanel",
+  "version": "1.0.0",
+  "description": "Excellence Services SARL - Serveur Node.js de production pour cPanel LWS",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.22.0",
+    "compression": "^1.8.0",
+    "express": "^5.2.1",
+    "sharp": "^0.35.4"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

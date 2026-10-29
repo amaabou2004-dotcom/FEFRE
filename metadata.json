@@ -1,0 +1,6 @@
+{
+  "name": "Excellence Services SARL",
+  "description": "Site officiel d'Excellence Services SARL (Niamey, Niger) - Relation client, centres de contact, solutions CRM, transformation numérique et développement digital.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,101 @@
+# ==============================================================================
+# EXCELLENCE SERVICES SARL — Configuration Apache / cPanel LWS
+# Compatible 100% Apache 2.2, Apache 2.4, LiteSpeed (LWS cPanel)
+# ==============================================================================
+
+# 1. Page d'accueil par défaut
+DirectoryIndex index.html index.php
+
+# 2. Empêcher le listage des dossiers (sécurisé)
+<IfModule mod_autoindex.c>
+  Options -Indexes
+</IfModule>
+
+# 3. Forcer l'encodage UTF-8 par défaut
+AddDefaultCharset UTF-8
+
+# 4. Types MIME modernes
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/svg+xml .svg .svgz
+  AddType font/woff2 .woff2
+  AddType font/woff .woff
+  AddType application/json .json
+  AddType application/manifest+json .webmanifest
+  AddType text/javascript .js
+  AddType text/css .css
+</IfModule>
+
+# 5. Réécriture d'URL pour React Single Page Application (SPA)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Redirection automatique vers HTTPS si actif
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Laisser passer index.html directement
+  RewriteRule ^index\.html$ - [L]
+
+  # Laisser passer tous les fichiers et dossiers réels (images, assets, scripts)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Rediriger toutes les routes virtuelles (/services, /contact, /a-propos, etc.) vers index.html
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# 6. Compression Gzip / Deflate pour la vitesse
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript
+  AddOutputFilterByType DEFLATE application/xml application/xhtml+xml application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript application/x-javascript
+  AddOutputFilterByType DEFLATE application/json application/ld+json
+  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE font/ttf font/otf font/woff font/woff2
+</IfModule>
+
+# 7. Mise en cache navigateur
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 month"
+
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType application/manifest+json "access plus 0 seconds"
+
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/x-icon "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/javascript "access plus 1 year"
+
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  <FilesMatch "\.(css|js|webp|png|jpg|jpeg|gif|ico|svg|woff|woff2)$">
+    Header set Cache-Control "max-age=31536000, public, immutable"
+  </FilesMatch>
+
+  <FilesMatch "index\.html$">
+    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-XSS-Protection "1; mode=block"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# 8. Erreur 404 routée vers l'application
+ErrorDocument 404 /index.html
