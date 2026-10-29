@@ -23,8 +23,6 @@ const supabaseAnonKey = (
   (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined)
 )?.trim();
 
-export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
-
 /**
  * Compte administrateur Supabase Auth associé à la connexion "mot de passe
  * uniquement" de l'espace admin. Cet email n'est JAMAIS demandé à l'écran :
@@ -40,15 +38,28 @@ export const ADMIN_LOGIN_EMAIL = (
 export const SUPABASE_NOT_CONFIGURED_MESSAGE =
   "Supabase n'est pas encore configuré : ajoutez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (voir SUPABASE_SETUP.md), puis redéployez le site.";
 
-export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl!, supabaseAnonKey!, {
+function createSafeClient(): SupabaseClient | null {
+  if (!supabaseUrl || !supabaseAnonKey) return null;
+  try {
+    // Une URL mal copiée dans Netlify ne doit jamais planter tout le site :
+    // on repasse en mode "contenus par défaut" avec un avertissement clair.
+    const parsed = new URL(supabaseUrl);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    return createClient(supabaseUrl, supabaseAnonKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
         detectSessionInUrl: true,
       },
-    })
-  : null;
+    });
+  } catch (err) {
+    console.warn('[Supabase] Configuration invalide, mode contenus par défaut :', err);
+    return null;
+  }
+}
+
+export const supabase: SupabaseClient | null = createSafeClient();
+export const isSupabaseConfigured = supabase !== null;
 
 if (!isSupabaseConfigured && import.meta.env.DEV) {
   console.warn(`[Supabase] ${SUPABASE_NOT_CONFIGURED_MESSAGE}`);
