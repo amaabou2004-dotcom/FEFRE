@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Lock,
-  Mail,
   Eye,
   EyeOff,
-  Cloud,
   LayoutDashboard,
   Briefcase,
   Layers,
@@ -31,6 +29,10 @@ import {
   RefreshCw,
   ShieldCheck,
   Download,
+  Database,
+  Newspaper,
+  FolderKanban,
+  Files,
 } from 'lucide-react';
 import { useAuth } from '../lib/AuthContext';
 import { useRouter } from '../lib/router';
@@ -38,9 +40,209 @@ import { useSiteData } from '../lib/DataContext';
 import { Logo } from '../components/Logo';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { PartnerManager } from '../components/admin/PartnerManager';
+import { EntityManager } from '../components/admin/EntityManager';
+
+/**
+ * Éditeur des paramètres du site (table Supabase `site_settings`).
+ * Les téléphones sont stockés en JSON : 3 lignes fixes comme sur le site.
+ */
+const SettingsEditor: React.FC = () => {
+  const { settings, updateSettings } = useSiteData();
+  const [form, setForm] = useState({
+    name: '',
+    shortName: '',
+    location: '',
+    country: '',
+    email: '',
+    whatsapp: '',
+    whatsappRaw: '',
+    workingHours: '',
+    nif: '',
+    rccm: '',
+    tagline: '',
+    heroSubtitle: '',
+    mission: '',
+    aboutText: '',
+    defaultWhatsAppMessage: '',
+    shopNotice: '',
+    seoDefaultTitle: '',
+    seoDefaultDescription: '',
+    facebook: '',
+    tiktok: '',
+    valuesText: '',
+  });
+  const [phones, setPhones] = useState<{ label: string; number: string; raw: string }[]>([]);
+  const [shopStatus, setShopStatus] = useState<'in_preparation' | 'open' | 'maintenance'>('in_preparation');
+  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setForm({
+      name: settings.name || '',
+      shortName: settings.shortName || '',
+      location: settings.location || '',
+      country: settings.country || '',
+      email: settings.email || '',
+      whatsapp: settings.whatsapp || '',
+      whatsappRaw: settings.whatsappRaw || '',
+      workingHours: settings.workingHours || '',
+      nif: settings.nif || '',
+      rccm: settings.rccm || '',
+      tagline: settings.tagline || '',
+      heroSubtitle: settings.heroSubtitle || '',
+      mission: settings.mission || '',
+      aboutText: settings.aboutText || '',
+      defaultWhatsAppMessage: settings.defaultWhatsAppMessage || '',
+      shopNotice: settings.shopNotice || '',
+      seoDefaultTitle: settings.seoDefaultTitle || '',
+      seoDefaultDescription: settings.seoDefaultDescription || '',
+      facebook: settings.facebook || '',
+      tiktok: settings.tiktok || '',
+      valuesText: (settings.values || []).join('\n'),
+    });
+    setPhones(settings.phones?.length ? settings.phones : [{ label: '', number: '', raw: '' }]);
+    setShopStatus(settings.shopStatus || 'in_preparation');
+  }, [settings]);
+
+  const fields: { key: keyof typeof form; label: string; textarea?: boolean }[] = [
+    { key: 'name', label: 'Raison sociale' },
+    { key: 'shortName', label: 'Nom court' },
+    { key: 'location', label: 'Localisation' },
+    { key: 'country', label: 'Pays' },
+    { key: 'email', label: 'Email officiel' },
+    { key: 'whatsapp', label: 'WhatsApp (affiché)' },
+    { key: 'whatsappRaw', label: 'WhatsApp (format international, sans +)' },
+    { key: 'workingHours', label: 'Horaires' },
+    { key: 'nif', label: 'NIF' },
+    { key: 'rccm', label: 'RCCM' },
+    { key: 'tagline', label: 'Slogan', textarea: true },
+    { key: 'heroSubtitle', label: 'Sous-titre page d’accueil', textarea: true },
+    { key: 'mission', label: 'Mission', textarea: true },
+    { key: 'aboutText', label: 'Texte « À propos »', textarea: true },
+    { key: 'defaultWhatsAppMessage', label: 'Message WhatsApp par défaut', textarea: true },
+    { key: 'shopNotice', label: 'Message boutique' },
+    { key: 'seoDefaultTitle', label: 'Titre SEO par défaut' },
+    { key: 'seoDefaultDescription', label: 'Description SEO par défaut', textarea: true },
+    { key: 'facebook', label: 'Lien Facebook' },
+    { key: 'tiktok', label: 'Lien TikTok' },
+  ];
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setFeedback(null);
+    try {
+      const { valuesText, ...rest } = form;
+      await updateSettings({
+        ...rest,
+        values: valuesText.split('\n').map((v) => v.trim()).filter(Boolean),
+        phones: phones.filter((p) => p.number.trim()),
+        shopStatus,
+      });
+      setFeedback({ type: 'success', message: 'Coordonnées et paramètres enregistrés dans Supabase : tout le site est à jour.' });
+    } catch (err: any) {
+      setFeedback({ type: 'error', message: `Enregistrement impossible : ${err?.message || 'erreur inconnue'}` });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputCls =
+    'w-full px-3.5 py-2.5 rounded-xl bg-[#01184C] border border-white/10 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]';
+  const labelCls = 'block text-[11px] uppercase font-bold tracking-wider text-slate-300 mb-1.5';
+
+  return (
+    <form onSubmit={handleSave} className="p-6 rounded-3xl bg-[#0A2254]/40 border border-white/10 space-y-5">
+      <div>
+        <h3 className="text-lg font-bold">Coordonnées, mentions légales & textes du site</h3>
+        <p className="text-xs text-gray-400">Enregistrés dans Supabase (table site_settings) et appliqués immédiatement à toutes les pages.</p>
+      </div>
+      {feedback && (
+        <div
+          className={`p-3.5 rounded-xl text-xs border ${
+            feedback.type === 'success'
+              ? 'bg-emerald-950/50 border-emerald-500/40 text-emerald-200'
+              : 'bg-red-950/50 border-red-500/40 text-red-200'
+          }`}
+        >
+          {feedback.message}
+        </div>
+      )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {fields.map((f) => (
+          <div key={f.key} className={f.textarea ? 'sm:col-span-2' : ''}>
+            <label className={labelCls}>{f.label}</label>
+            {f.textarea ? (
+              <textarea
+                value={form[f.key]}
+                rows={3}
+                onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
+                className={inputCls}
+              />
+            ) : (
+              <input value={form[f.key]} onChange={(e) => setForm({ ...form, [f.key]: e.target.value })} className={inputCls} />
+            )}
+          </div>
+        ))}
+        <div>
+          <label className={labelCls}>Valeurs (une par ligne)</label>
+          <textarea value={form.valuesText} rows={3} onChange={(e) => setForm({ ...form, valuesText: e.target.value })} className={inputCls} />
+        </div>
+        <div>
+          <label className={labelCls}>État de la boutique</label>
+          <select value={shopStatus} onChange={(e) => setShopStatus(e.target.value as any)} className={inputCls}>
+            <option value="in_preparation" className="bg-[#01184C]">En préparation</option>
+            <option value="open" className="bg-[#01184C]">Ouverte</option>
+            <option value="maintenance" className="bg-[#01184C]">Maintenance</option>
+          </select>
+        </div>
+      </div>
+      <div className="space-y-3">
+        <p className="text-[11px] uppercase font-bold tracking-wider text-slate-300">Lignes téléphoniques</p>
+        {phones.map((p, i) => (
+          <div key={i} className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <input
+              value={p.label}
+              placeholder="Libellé (ex : Ligne Principale)"
+              onChange={(e) => setPhones(phones.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+              className={inputCls}
+            />
+            <input
+              value={p.number}
+              placeholder="+227 …"
+              onChange={(e) => setPhones(phones.map((x, j) => (j === i ? { ...x, number: e.target.value } : x)))}
+              className={inputCls}
+            />
+            <input
+              value={p.raw}
+              placeholder="227… (sans +)"
+              onChange={(e) => setPhones(phones.map((x, j) => (j === i ? { ...x, raw: e.target.value } : x)))}
+              className={inputCls}
+            />
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => setPhones([...phones, { label: '', number: '', raw: '' }])}
+          className="text-[11px] font-semibold text-[#D4AF37] hover:underline cursor-pointer"
+        >
+          + Ajouter une ligne
+        </button>
+      </div>
+      <button
+        type="submit"
+        disabled={saving}
+        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D4AF37] hover:bg-[#E5C358] text-[#01184C] text-xs font-bold disabled:opacity-50 cursor-pointer"
+      >
+        <Save className="w-3.5 h-3.5" />
+        {saving ? 'Enregistrement…' : 'Enregistrer dans Supabase'}
+      </button>
+    </form>
+  );
+};
 
 export const AdminPage: React.FC = () => {
-  const { isAdmin, loginWithPassword, logout, currentUser } = useAuth();
+  const { isAdmin, isAuthenticated, loginWithPassword, logout, currentUser } = useAuth();
   const { currentPath, navigate } = useRouter();
   const {
     services,
@@ -52,6 +254,12 @@ export const AdminPage: React.FC = () => {
     settings,
     media,
     faqs,
+    projects,
+    articles,
+    pages,
+    isConnectedToCloud,
+    isSupabaseConfigured,
+    refreshData,
     saveService,
     deleteService,
     saveSector,
@@ -60,17 +268,25 @@ export const AdminPage: React.FC = () => {
     deleteTestimonial,
     savePartner,
     deletePartner,
+    saveProject,
+    deleteProject,
+    saveArticle,
+    deleteArticle,
+    savePage,
     updateQuoteStatus,
     updateMessageStatus,
+    deleteQuote,
+    deleteContactMessage,
     updateSettings,
     saveMedia,
     deleteMedia,
     saveFaq,
     deleteFaq,
+    seedDatabaseIfNeeded,
     resetToDefaults,
   } = useSiteData();
 
-  // Login form state (password-only)
+  // Login form state (mot de passe uniquement, sans email)
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState('');
@@ -116,7 +332,7 @@ export const AdminPage: React.FC = () => {
     e.preventDefault();
     setLoginError('');
     if (!password.trim()) {
-      setLoginError('Veuillez saisir votre mot de passe administrateur.');
+      setLoginError('Veuillez saisir le mot de passe administrateur.');
       return;
     }
     setIsLoggingIn(true);
@@ -124,6 +340,21 @@ export const AdminPage: React.FC = () => {
     setIsLoggingIn(false);
     if (!res.success) {
       setLoginError(res.error || 'Mot de passe incorrect. Veuillez vérifier votre saisie.');
+    }
+  };
+
+  const handleResetDefaults = async () => {
+    if (
+      !window.confirm(
+        'Réimporter les contenus par défaut dans Supabase ? Les éléments par défaut (services, secteurs, FAQ, etc.) seront réécrits avec leurs valeurs d’origine. Les éléments que vous avez ajoutés en plus sont conservés.'
+      )
+    ) {
+      return;
+    }
+    try {
+      await resetToDefaults();
+    } catch (err: any) {
+      window.alert(`Réinitialisation impossible : ${err?.message || 'erreur inconnue'}`);
     }
   };
 
@@ -151,10 +382,40 @@ export const AdminPage: React.FC = () => {
               </h1>
               <p className="text-xs text-slate-500 dark:text-gray-400">Excellence Services SARL • Niamey, Niger</p>
               <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-slate-100 dark:bg-[#0A2254]/60 border border-slate-200 dark:border-[#D4AF37]/30 text-[10px] font-mono text-[#01184C] dark:text-[#D4AF37]">
-                <Cloud className="w-3 h-3 animate-pulse text-[#D4AF37]" />
-                <span>ACCÈS SÉCURISÉ CLOUD</span>
+                <Database className="w-3 h-3 animate-pulse text-[#D4AF37]" />
+                <span>ACCÈS PAR MOT DE PASSE • SUPABASE</span>
               </div>
             </div>
+
+            {!isSupabaseConfigured && (
+              <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/40 text-xs text-amber-800 dark:text-amber-200 space-y-1.5">
+                <p className="font-bold flex items-center gap-1.5">
+                  <AlertCircle className="w-4 h-4 shrink-0" /> Supabase n’est pas encore configuré sur ce site
+                </p>
+                <p>
+                  Ajoutez <code className="font-mono font-semibold">VITE_SUPABASE_URL</code> et{' '}
+                  <code className="font-mono font-semibold">VITE_SUPABASE_ANON_KEY</code>, exécutez le script SQL
+                  fourni, créez le compte admin avec votre mot de passe dans Supabase, puis redéployez. Guide :{' '}
+                  <strong>SUPABASE_SETUP.md</strong>.
+                </p>
+              </div>
+            )}
+
+            {isSupabaseConfigured && isAuthenticated && !isAdmin && (
+              <div className="p-3.5 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-500/40 text-xs text-red-700 dark:text-red-300 space-y-2">
+                <p>
+                  Mot de passe accepté, mais ce compte n’est pas reconnu administrateur : vérifiez qu’il figure dans
+                  la table <code className="font-mono">admin_users</code> de Supabase (guide SUPABASE_SETUP.md).
+                </p>
+                <button
+                  type="button"
+                  onClick={logout}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-600 text-white font-semibold cursor-pointer"
+                >
+                  <LogOut className="w-3.5 h-3.5" /> Se déconnecter
+                </button>
+              </div>
+            )}
 
             {loginError && (
               <div className="p-3 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-500/40 text-xs text-red-700 dark:text-red-300 flex items-start gap-2.5 shadow-sm">
@@ -166,7 +427,7 @@ export const AdminPage: React.FC = () => {
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
                 <label className="block text-[10px] uppercase font-bold tracking-wider text-slate-600 dark:text-gray-300 mb-1.5">
-                  Mot de passe
+                  Mot de passe administrateur
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-slate-400 dark:text-gray-400" />
@@ -174,6 +435,7 @@ export const AdminPage: React.FC = () => {
                     type={showPassword ? 'text' : 'password'}
                     required
                     autoFocus
+                    autoComplete="current-password"
                     placeholder="Saisissez votre mot de passe"
                     value={password}
                     onChange={(e) => {
@@ -205,9 +467,12 @@ export const AdminPage: React.FC = () => {
                       <span>Connexion en cours...</span>
                     </>
                   ) : (
-                    'Se connecter à la console'
+                    'Accéder à l’espace admin'
                   )}
                 </button>
+                <p className="mt-2 text-center text-[10px] text-slate-400 dark:text-gray-500">
+                  Accès par mot de passe uniquement. Le mot de passe se configure une seule fois dans Supabase → Authentication → Users (guide SUPABASE_SETUP.md).
+                </p>
               </div>
 
               <div className="pt-1 text-center">
@@ -233,6 +498,9 @@ export const AdminPage: React.FC = () => {
     { id: 'sectors', label: 'Secteurs d’activité', icon: Layers },
     { id: 'testimonials', label: 'Témoignages', icon: Quote },
     { id: 'partners', label: `Partenaires (${partners.length})`, icon: Handshake },
+    { id: 'projects', label: `Réalisations (${projects.length})`, icon: FolderKanban },
+    { id: 'articles', label: `Actualités (${articles.length})`, icon: Newspaper },
+    { id: 'pages', label: 'Pages du site', icon: Files },
     { id: 'faq', label: 'FAQ', icon: HelpCircle },
     {
       id: 'contact',
@@ -366,9 +634,9 @@ export const AdminPage: React.FC = () => {
             </a>
             <ThemeToggle className="w-8 h-8" />
             <button
-              onClick={resetToDefaults}
+              onClick={handleResetDefaults}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-[#0A2254] border border-slate-300 dark:border-white/10 text-[11px] font-semibold text-slate-700 dark:text-gray-300 hover:text-[#01184C] dark:hover:text-white hover:border-[#D4AF37] transition-all cursor-pointer shadow-2xs"
-              title="Réinitialiser les données aux valeurs par défaut officielles"
+              title="Réimporter les contenus par défaut dans Supabase"
             >
               <RefreshCw className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="hidden sm:inline">Réinitialiser</span>
@@ -487,52 +755,257 @@ export const AdminPage: React.FC = () => {
           )}
 
           {activeTab === 'services' && (
-            <div className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-bold">Catalogue des Services</h3>
-                  <p className="text-xs text-gray-400">Modifier ou ajuster les offres de la SARL</p>
-                </div>
-              </div>
+            <EntityManager
+              title="Catalogue des Services"
+              description="Table Supabase « services » — modifiez les offres affichées sur tout le site."
+              items={services}
+              onSave={saveService}
+              onDelete={deleteService}
+              getTitle={(srv) => `${srv.number ? srv.number + ' — ' : ''}${srv.title}`}
+              getSubtitle={(srv) => srv.summary}
+              defaults={{ status: 'active', iconName: 'Headphones', prestations: [] }}
+              addLabel="Nouveau service"
+              fields={[
+                { key: 'number', label: 'Numéro (01, 02…)' },
+                { key: 'title', label: 'Titre', required: true },
+                { key: 'slug', label: 'Slug URL (auto si vide)' },
+                { key: 'iconName', label: 'Icône Lucide (Headphones, Database, Compass…)' },
+                { key: 'positioning', label: 'Positionnement' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                { key: 'summary', label: 'Résumé', type: 'textarea', rows: 3 },
+                { key: 'prestations', label: 'Prestations (une par ligne)', type: 'list' },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'active', label: 'Actif' },
+                    { value: 'draft', label: 'Brouillon' },
+                    { value: 'hidden', label: 'Masqué' },
+                  ],
+                },
+              ]}
+            />
+          )}
 
-              <div className="grid grid-cols-1 gap-4">
-                {services.map((srv) => (
-                  <div
-                    key={srv.id}
-                    className="p-5 rounded-2xl bg-[#0A2254]/40 border border-white/10 space-y-3"
-                  >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <span className="text-[10px] font-mono text-[#D4AF37] font-bold">
-                          SERVICE {srv.number}
-                        </span>
-                        <h4 className="text-base font-bold text-white">{srv.title}</h4>
-                        <p className="text-xs text-[#D4AF37]">{srv.positioning}</p>
-                      </div>
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">
-                        {srv.status}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-300">{srv.summary}</p>
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {srv.prestations.map((p, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2 py-0.5 rounded bg-[#01184C] border border-white/10 text-[10px] text-gray-300"
-                        >
-                          {p}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+          {activeTab === 'sectors' && (
+            <EntityManager
+              title="Secteurs d’activité"
+              description="Table Supabase « sectors »."
+              items={sectors}
+              onSave={saveSector}
+              onDelete={deleteSector}
+              getTitle={(sec) => sec.name}
+              getSubtitle={(sec) => sec.description}
+              defaults={{ status: 'active', iconName: 'ShieldCheck', features: [] }}
+              addLabel="Nouveau secteur"
+              fields={[
+                { key: 'name', label: 'Nom', required: true },
+                { key: 'slug', label: 'Slug URL (auto si vide)' },
+                { key: 'iconName', label: 'Icône Lucide' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                { key: 'description', label: 'Description', type: 'textarea', rows: 3 },
+                { key: 'features', label: 'Points forts (un par ligne)', type: 'list' },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'active', label: 'Actif' },
+                    { value: 'draft', label: 'Brouillon' },
+                    { value: 'hidden', label: 'Masqué' },
+                  ],
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === 'testimonials' && (
+            <EntityManager
+              title="Témoignages clients"
+              description="Table Supabase « testimonials »."
+              items={testimonials}
+              onSave={saveTestimonial}
+              onDelete={deleteTestimonial}
+              getTitle={(t) => t.author}
+              getSubtitle={(t) => `« ${t.quote} »`}
+              defaults={{ status: 'published' }}
+              addLabel="Nouveau témoignage"
+              fields={[
+                { key: 'author', label: 'Auteur', required: true },
+                { key: 'role', label: 'Fonction' },
+                { key: 'company', label: 'Entreprise' },
+                { key: 'rating', label: 'Note (1 à 5)', type: 'number' },
+                { key: 'avatarUrl', label: 'Photo / avatar', type: 'image' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                { key: 'quote', label: 'Citation', type: 'textarea', rows: 3, required: true },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'published', label: 'Publié' },
+                    { value: 'pending', label: 'En attente' },
+                  ],
+                },
+              ]}
+            />
           )}
 
           {activeTab === 'partners' && (
             <PartnerManager />
           )}
+
+          {activeTab === 'projects' && (
+            <EntityManager
+              title="Réalisations / Projets"
+              description="Table Supabase « projects » — affichés dans la section Réalisations."
+              items={projects}
+              onSave={saveProject}
+              onDelete={deleteProject}
+              getTitle={(pr) => pr.title}
+              getSubtitle={(pr) => pr.summary}
+              defaults={{ status: 'standard', deliverables: [], results: [] }}
+              addLabel="Nouvelle réalisation"
+              fields={[
+                { key: 'title', label: 'Titre', required: true },
+                { key: 'slug', label: 'Slug (optionnel)' },
+                { key: 'category', label: 'Catégorie' },
+                { key: 'client', label: 'Client' },
+                { key: 'date', label: 'Date (texte libre)' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                { key: 'imageUrl', label: 'Image', type: 'image' },
+                { key: 'summary', label: 'Résumé', type: 'textarea', rows: 3 },
+                { key: 'deliverables', label: 'Livrables (un par ligne)', type: 'list' },
+                { key: 'results', label: 'Résultats (un par ligne)', type: 'list' },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'featured', label: 'À la une' },
+                    { value: 'standard', label: 'Standard' },
+                    { value: 'upcoming', label: 'À venir' },
+                  ],
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === 'articles' && (
+            <EntityManager
+              title="Actualités / Articles"
+              description="Table Supabase « articles » — page Actualités et section d’accueil."
+              items={articles}
+              onSave={saveArticle}
+              onDelete={deleteArticle}
+              getTitle={(a) => a.title}
+              getSubtitle={(a) => a.summary}
+              defaults={{ status: 'published', author: 'Excellence Services SARL', tags: [] }}
+              addLabel="Nouvel article"
+              fields={[
+                { key: 'title', label: 'Titre', required: true },
+                { key: 'slug', label: 'Slug URL (auto si vide)' },
+                { key: 'category', label: 'Catégorie' },
+                { key: 'date', label: 'Date (ex : 12 Mars 2026)' },
+                { key: 'readTime', label: 'Temps de lecture (ex : 4 min)' },
+                { key: 'author', label: 'Auteur' },
+                { key: 'authorRole', label: 'Fonction de l’auteur' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                { key: 'imageUrl', label: 'Image principale', type: 'image' },
+                { key: 'summary', label: 'Résumé', type: 'textarea', rows: 3 },
+                { key: 'content', label: 'Contenu complet', type: 'textarea', rows: 10 },
+                { key: 'tags', label: 'Étiquettes (une par ligne)', type: 'list' },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'published', label: 'Publié' },
+                    { value: 'draft', label: 'Brouillon' },
+                  ],
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === 'pages' && (
+            <EntityManager
+              title="Textes des pages"
+              description="Table Supabase « pages » — titres, accroches et SEO des pages principales. Les pages système ne se suppriment pas."
+              items={Object.values(pages)}
+              onSave={savePage}
+              getTitle={(pg) => pg.name || pg.title}
+              getSubtitle={(pg) => pg.subtitle}
+              addLabel="Nouvelle page"
+              fields={[
+                { key: 'name', label: 'Nom interne', required: true },
+                { key: 'slug', label: 'Identifiant / slug', required: true },
+                { key: 'title', label: 'Titre affiché', type: 'textarea', rows: 2 },
+                { key: 'subtitle', label: 'Sous-titre', type: 'textarea', rows: 2 },
+                { key: 'content', label: 'Contenu', type: 'textarea', rows: 5 },
+                { key: 'ctaText', label: 'Texte du bouton' },
+                { key: 'ctaLink', label: 'Lien du bouton' },
+                { key: 'seoTitle', label: 'Titre SEO' },
+                { key: 'seoDescription', label: 'Description SEO', type: 'textarea', rows: 2 },
+              ]}
+            />
+          )}
+
+          {activeTab === 'faq' && (
+            <EntityManager
+              title="Foire aux questions (FAQ)"
+              description="Table Supabase « faqs »."
+              items={faqs}
+              onSave={saveFaq}
+              onDelete={deleteFaq}
+              getTitle={(f) => f.question}
+              getSubtitle={(f) => f.answer}
+              defaults={{ status: 'published', category: 'Général', displayOrder: faqs.length + 1 }}
+              addLabel="Nouvelle question"
+              fields={[
+                { key: 'question', label: 'Question', required: true, type: 'textarea', rows: 2 },
+                { key: 'answer', label: 'Réponse', type: 'textarea', rows: 4, required: true },
+                { key: 'category', label: 'Catégorie' },
+                { key: 'displayOrder', label: 'Ordre d’affichage', type: 'number' },
+                {
+                  key: 'status',
+                  label: 'Statut',
+                  type: 'select',
+                  options: [
+                    { value: 'published', label: 'Publiée' },
+                    { value: 'draft', label: 'Brouillon' },
+                  ],
+                },
+              ]}
+            />
+          )}
+
+          {activeTab === 'media' && (
+            <EntityManager
+              title="Médiathèque"
+              description="Table Supabase « media » + bucket Storage « site-media ». Remplacer l’URL d’un emplacement (ex : hero-main) change l’image sur le site."
+              items={media}
+              onSave={saveMedia}
+              onDelete={deleteMedia}
+              getTitle={(m) => m.name || m.id}
+              getSubtitle={(m) => `${m.location || ''} · ${m.alt || ''}`}
+              defaults={{ category: 'custom' }}
+              addLabel="Nouveau média"
+              fields={[
+                { key: 'name', label: 'Nom', required: true },
+                { key: 'location', label: 'Emplacement sur le site (ex : hero-main)' },
+                { key: 'url', label: 'Image (URL ou téléversement Supabase)', type: 'image' },
+                { key: 'mobileUrl', label: 'URL mobile (optionnel)' },
+                { key: 'alt', label: 'Texte alternatif (accessibilité / SEO)' },
+                { key: 'category', label: 'Catégorie' },
+                { key: 'aspectRatio', label: 'Ratio (16:9, 4:3…)' },
+                { key: 'priority', label: 'Prioritaire', type: 'checkbox' },
+                { key: 'description', label: 'Description', type: 'textarea', rows: 2 },
+              ]}
+            />
+          )}
+
 
           {activeTab === 'contact' && (
             <div className="space-y-6">
@@ -567,7 +1040,33 @@ export const AdminPage: React.FC = () => {
                       <p className="text-gray-400">« {q.description || q.details} »</p>
                       <p className="text-[#D4AF37]">
                         {q.email} • {q.phone}
+                        {q.createdAt ? ` • ${new Date(q.createdAt).toLocaleString('fr-FR')}` : ''}
                       </p>
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <label className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Statut :</label>
+                        <select
+                          value={q.status}
+                          onChange={(e) => void updateQuoteStatus(q.id, e.target.value as any).catch((err) => window.alert(err?.message || 'Erreur'))}
+                          className="px-2 py-1.5 rounded-lg bg-[#01184C] border border-white/15 text-[11px] text-white cursor-pointer"
+                        >
+                          <option value="new">Nouveau</option>
+                          <option value="in_review">En étude</option>
+                          <option value="contacted">Contacté</option>
+                          <option value="completed">Terminé</option>
+                          <option value="archived">Archivé</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm('Supprimer définitivement cette demande de devis ?')) {
+                              void deleteQuote(q.id).catch((err) => window.alert(err?.message || 'Erreur'));
+                            }
+                          }}
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-red-400 hover:bg-red-500/10 border border-red-500/20 text-[11px] font-semibold cursor-pointer"
+                        >
+                          <Trash2 className="w-3 h-3" /> Supprimer
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -591,6 +1090,30 @@ export const AdminPage: React.FC = () => {
                       </div>
                       <p className="text-[#D4AF37] font-semibold">{m.subject}</p>
                       <p className="text-gray-300">« {m.message} »</p>
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <label className="text-[10px] uppercase font-bold tracking-wider text-gray-400">Statut :</label>
+                        <select
+                          value={m.status}
+                          onChange={(e) => void updateMessageStatus(m.id, e.target.value as any).catch((err) => window.alert(err?.message || 'Erreur'))}
+                          className="px-2 py-1.5 rounded-lg bg-[#01184C] border border-white/15 text-[11px] text-white cursor-pointer"
+                        >
+                          <option value="unread">Non lu</option>
+                          <option value="read">Lu</option>
+                          <option value="replied">Répondu</option>
+                          <option value="archived">Archivé</option>
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm('Supprimer définitivement ce message ?')) {
+                              void deleteContactMessage(m.id).catch((err) => window.alert(err?.message || 'Erreur'));
+                            }
+                          }}
+                          className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-red-400 hover:bg-red-500/10 border border-red-500/20 text-[11px] font-semibold cursor-pointer"
+                        >
+                          <Trash2 className="w-3 h-3" /> Supprimer
+                        </button>
+                      </div>
                     </div>
                   ))
                 )}
@@ -598,70 +1121,7 @@ export const AdminPage: React.FC = () => {
             </div>
           )}
 
-          {activeTab === 'settings' && (
-            <div className="p-6 rounded-3xl bg-[#0A2254]/40 border border-white/10 space-y-6">
-              <div>
-                <h3 className="text-lg font-bold">Coordonnées et Mentions Légales</h3>
-                <p className="text-xs text-gray-400">Informations légales et contacts de la SARL</p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">Raison Sociale</span>
-                  <span className="font-bold text-white">{settings.name}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">Localisation</span>
-                  <span className="font-bold text-white">{settings.location}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">NIF</span>
-                  <span className="font-mono font-bold text-white">{settings.nif}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">RCCM</span>
-                  <span className="font-mono font-bold text-[#D4AF37]">{settings.rccm}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">Courriel</span>
-                  <span className="font-bold text-white">{settings.email}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">Ligne WhatsApp</span>
-                  <span className="font-bold text-[#D4AF37]">{settings.whatsapp}</span>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">Facebook</span>
-                  <a
-                    href={settings.facebook || 'https://www.facebook.com/share/18nx1djJnt/?mibextid=wwXIfr'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-bold text-[#1877F2] hover:underline truncate block"
-                  >
-                    {settings.facebook || 'https://www.facebook.com/share/18nx1djJnt/?mibextid=wwXIfr'}
-                  </a>
-                </div>
-
-                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10">
-                  <span className="text-gray-400 block mb-1">TikTok</span>
-                  <a
-                    href={settings.tiktok || 'https://www.tiktok.com/@excellenceservices?_r=1&_t=ZS-99nADDdMPcS'}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="font-bold text-[#FE2C55] hover:underline truncate block"
-                  >
-                    {settings.tiktok || 'https://www.tiktok.com/@excellenceservices?_r=1&_t=ZS-99nADDdMPcS'}
-                  </a>
-                </div>
-              </div>
-            </div>
-          )}
+          {activeTab === 'settings' && <SettingsEditor />}
 
           {activeTab === 'guide' && (
             <div className="p-8 rounded-3xl bg-[#0A2254]/40 border border-white/10 space-y-6">
@@ -679,7 +1139,18 @@ export const AdminPage: React.FC = () => {
                     <li>Les 8 services reflètent le périmètre officiel déclaré au RCCM et dans les statuts de la SARL.</li>
                     <li>Toute demande soumise par le formulaire de devis ou de contact apparaît instantanément dans l'onglet Devis & Messages.</li>
                     <li>Les coordonnées (NIF, RCCM, Téléphones) sont synchronisées sur l'ensemble des pages publiques et du pied de page.</li>
+                    <li>Toutes les données sont stockées dans Supabase (PostgreSQL) : chaque enregistrement met à jour le site en temps réel.</li>
                   </ul>
+                </div>
+                <div className="p-4 rounded-xl bg-[#01184C] border border-white/10 space-y-2">
+                  <h4 className="font-bold text-[#D4AF37]">Supabase — mise en route (à faire une seule fois) :</h4>
+                  <ol className="list-decimal pl-5 space-y-1 text-gray-200">
+                    <li>Supabase → SQL Editor : exécuter le script <code className="font-mono text-[#D4AF37]">supabase/migrations/20261029120000_initial_schema.sql</code> (et y indiquer votre email admin).</li>
+                    <li>Supabase → Authentication → Users : créer le compte administrateur technique avec votre mot de passe (celui saisi ici, sans email à taper), puis désactiver les inscriptions publiques.</li>
+                    <li>Hébergeur : renseigner <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_URL</code> et <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_ANON_KEY</code>, puis redéployer le site.</li>
+                    <li>Connectez-vous ici : les contenus par défaut sont importés automatiquement dans Supabase. Détail complet dans le fichier SUPABASE_SETUP.md du projet.</li>
+                  </ol>
+                  <p className="text-amber-300">Sécurité : l’ancien mot de passe partagé a été supprimé. Seuls les comptes présents dans la table admin_users peuvent modifier le site ; les visiteurs ne voient jamais les devis et messages reçus.</p>
                 </div>
               </div>
             </div>

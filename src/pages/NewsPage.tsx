@@ -15,6 +15,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 import { BLOG_ARTICLES } from '../data/articles';
+import { useSiteData } from '../lib/DataContext';
 import { ArticleItem } from '../types';
 import { useRouter } from '../lib/router';
 
@@ -29,7 +30,11 @@ export const NewsPage: React.FC = () => {
 
   const categories = ['Tous', 'Relation Client & BPO', 'Solutions CRM & Automatisation', 'Transformation Digitale & IA'];
 
-  const filteredArticles = BLOG_ARTICLES.filter((art) => {
+  // Articles gérés dans Supabase (repli sur les articles intégrés au code)
+  const { articles } = useSiteData();
+  const allArticles = (articles.length ? articles : BLOG_ARTICLES).filter((a) => a.status !== 'draft');
+
+  const filteredArticles = allArticles.filter((art) => {
     const matchesCategory = selectedCategory === 'Tous' || art.category === selectedCategory;
     const matchesSearch =
       art.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
