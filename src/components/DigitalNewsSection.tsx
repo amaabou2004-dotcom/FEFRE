@@ -16,6 +16,7 @@ import {
 import { useRouter } from '../lib/router';
 import { useLanguage } from '../hooks/useLanguage';
 import { BLOG_ARTICLES } from '../data/articles';
+import { useSiteData } from '../lib/DataContext';
 import { ArticleItem } from '../types';
 
 export const DigitalNewsSection: React.FC = () => {
@@ -24,8 +25,11 @@ export const DigitalNewsSection: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState<ArticleItem | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Take the 3 latest blog articles
-  const latestArticles = BLOG_ARTICLES.slice(0, 3);
+  // Articles gérés dans Supabase (repli sur les articles intégrés au code)
+  const { articles } = useSiteData();
+  const latestArticles = (articles.length ? articles : BLOG_ARTICLES)
+    .filter((a) => a.status !== 'draft')
+    .slice(0, 3);
 
   const handleShare = (article: ArticleItem) => {
     if (navigator.clipboard) {

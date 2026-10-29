@@ -10,6 +10,7 @@ export interface ServiceItem {
   iconName: string;
   prestations: string[];
   status?: 'active' | 'draft' | 'hidden';
+  displayOrder?: number;
   updatedAt?: string;
 }
 
@@ -21,6 +22,7 @@ export interface SectorItem {
   description: string;
   features: string[];
   status?: 'active' | 'draft' | 'hidden';
+  displayOrder?: number;
   updatedAt?: string;
 }
 
@@ -33,6 +35,7 @@ export interface TestimonialItem {
   rating?: number;
   avatarUrl?: string;
   status?: 'published' | 'pending';
+  displayOrder?: number;
   updatedAt?: string;
 }
 
@@ -78,14 +81,20 @@ export interface MediaItem {
 export interface QuoteRequest {
   id: string;
   fullName: string;
+  firstName?: string;
+  lastName?: string;
   company: string;
   email: string;
   phone: string;
+  whatsapp?: string;
   serviceInterest: string;
+  sector?: string;
   budgetRange?: string;
   timeline?: string;
   details: string;
+  fileName?: string;
   status: 'new' | 'in_review' | 'contacted' | 'completed' | 'archived';
+  adminNotes?: string;
   createdAt: string;
 }
 
@@ -98,6 +107,7 @@ export interface ContactMessage {
   subject: string;
   message: string;
   status: 'unread' | 'read' | 'replied' | 'archived';
+  notes?: string;
   createdAt: string;
 }
 
@@ -135,6 +145,7 @@ export interface ProjectItem {
   imageUrl?: string;
   date?: string;
   status: 'featured' | 'standard' | 'upcoming';
+  displayOrder?: number;
   updatedAt?: string;
 }
 
@@ -154,6 +165,7 @@ export interface ArticleItem {
   authorRole: string;
   tags?: string[];
   status?: 'published' | 'draft';
+  displayOrder?: number;
 }
 
 export interface PartnerUser {

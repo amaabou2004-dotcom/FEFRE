@@ -8,6 +8,8 @@ export default defineConfig({
   server: {
     port: 3000,
     host: '0.0.0.0',
+    // Autorise les hôtes d'aperçu (environnements de dev distants / proxys)
+    allowedHosts: true,
   },
   esbuild: {
     legalComments: 'none',
@@ -28,8 +30,8 @@ export default defineConfig({
         compact: true,
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('firebase')) {
-              return 'vendor-firebase';
+            if (id.includes('@supabase')) {
+              return 'vendor-supabase';
             }
             if (id.includes('lucide-react')) {
               return 'vendor-icons';
