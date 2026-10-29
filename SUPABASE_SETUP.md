@@ -6,13 +6,14 @@ FAQ, partenaires, réalisations, articles, pages, médias, paramètres du site,
 **et les demandes de devis + messages reçus**. Chaque modification enregistrée
 dans l'admin est stockée dans Supabase et visible sur le site **en temps réel**.
 
-Il ne reste que **6 étapes à faire une seule fois** dans votre projet Supabase
-(environ 10 minutes). Tant qu'elles ne sont pas terminées, le site public
-continue d'afficher les contenus intégrés au code — il ne casse pas.
+Le projet Supabase officiel est déjà intégré au code et configuré. Les étapes
+ci-dessous servent de référence pour une réinstallation, un remplacement de
+projet ou une rotation de clé ; pour le site actuel, seul le redéploiement de
+la dernière version du code est nécessaire (étape 5).
 
 ---
 
-## Étape 1 — Récupérer l'URL et la clé publique du projet
+## Étape 1 — Récupérer l'URL et la clé publique du projet (référence)
 
 1. Ouvrez [app.supabase.com](https://app.supabase.com) → votre projet.
 2. **Project Settings** (⚙️ en bas à gauche) → **API**.
@@ -78,34 +79,30 @@ Pour qu'un visiteur ne puisse pas créer de compte :
 Même sans cela, un compte non listé dans `admin_users` ne peut rien modifier ;
 mais cette étape évite tout compte parasite.
 
-## Étape 5 — Donner les clés au site, puis redéployer
+## Étape 5 — Redéployer (aucune clé à configurer chez l'hébergeur)
 
-Les variables `VITE_…` sont intégrées au site **au moment du build** :
-après les avoir renseignées, il faut **redéployer**.
+L'URL du projet Supabase officiel et sa clé **publishable publique** sont
+intégrées comme valeurs par défaut dans `src/lib/supabase.ts`. Il n'y a donc
+**aucune variable Supabase à ajouter dans Netlify, LWS ou en local** : déployez
+simplement la dernière version du code.
 
-### Sur Netlify (recommandé)
-Site configuration → **Environment variables** → ajoutez :
+Les variables `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY` (ou
+`VITE_SUPABASE_ANON_KEY`) restent possibles comme **surcharge optionnelle**
+pour pointer temporairement vers un autre projet pendant le développement.
+Dans ce cas, fournissez l'URL et la clé ensemble, puis relancez un build,
+car les variables `VITE_…` sont intégrées au site au moment du build.
 
-| Clé | Valeur |
-|---|---|
-| `VITE_SUPABASE_URL` | l'URL de l'étape 1 |
-| `VITE_SUPABASE_ANON_KEY` | la clé publique de l'étape 1 |
+### Sur Netlify
+Aucun réglage Supabase requis : fusionnez la dernière version du code (ou
+**Deploys → Trigger deploy → Deploy site**).
 
-Puis **Deploys → Trigger deploy → Deploy site**.
-
-### En local (pour tester sur votre ordinateur)
-Créez un fichier `.env.local` à la racine du projet (modèle : `.env.example`) :
-
-```
-VITE_SUPABASE_URL=https://votre-projet.supabase.co
-VITE_SUPABASE_ANON_KEY=votre-cle-publique
-```
-
-puis `npm run dev`.
+### En local
+Lancez simplement `npm run dev`. Le fichier `.env.local` n'est nécessaire
+que pour surcharger le projet Supabase (voir `.env.example`).
 
 ### Sur cPanel / LWS
-Les archives ZIP sont générées par build : relancez `npm run build:cpanel`
-**après** avoir créé `.env.local`, sinon les ZIP ne contiendront pas les clés.
+Relancez `npm run build:cpanel` depuis la dernière version du code, puis
+téléversez le nouveau package : il contient déjà la configuration publique.
 
 ## Étape 6 — Première connexion
 
@@ -147,16 +144,17 @@ emplacement (ex. `hero-main`).
 
 | Symptôme | Cause probable | Solution |
 |---|---|---|
-| Bandeau « Supabase non configuré » sur /admin | Variables absentes ou pas de redéploiement | Étape 5, puis rebuild/redéploy |
+| Bandeau « Connexion à Supabase indisponible » sur /admin | Ancien déploiement, panne réseau ou clé publique révoquée | Redéployer la dernière version du code ; vérifier l'état du projet Supabase |
 | « Tables introuvables » | Script SQL non exécuté | Étape 2 |
 | Connexion OK mais « compte non autorisé » | Email absent de `admin_users` | Section 5 du SQL / requête ci-dessus |
 | « Mot de passe incorrect » | Le mot de passe tapé ≠ celui du compte de l'étape 3 (ou compte non créé / email technique différent sans `VITE_ADMIN_EMAIL`) | Étape 3 ; vérifiez « Auto Confirm » et, si besoin, `VITE_ADMIN_EMAIL` |
 | « Permission refusée (RLS) » à l'enregistrement | Compte absent de `admin_users`, ou session expirée | Section 5 du SQL, puis reconnectez-vous |
-| Le devis test n'arrive pas | Ancien déploiement sans les clés | Redéployer après l'étape 5 |
+| Le devis test n'arrive pas | Ancien déploiement ou projet Supabase injoignable | Redéployer la dernière version du code et vérifier Supabase |
 
 ## Ce qui a changé dans le code
 
-- `src/lib/supabase.ts` : client Supabase + messages d'erreur en français.
+- `src/lib/supabase.ts` : client Supabase avec configuration publique officielle
+  intégrée (surcharge `VITE_…` optionnelle) + messages d'erreur en français.
 - `src/lib/supabase-mappers.ts` : traduction colonnes SQL ⇄ objets du site.
 - `src/lib/DataContext.tsx` : données du site via Supabase (même interface
   qu'avant — aucune page publique modifiée, sauf les Actualités branchées).

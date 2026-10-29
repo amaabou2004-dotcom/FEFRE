@@ -3,25 +3,37 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 /**
  * Client Supabase (navigateur).
  *
- * Configuration via variables d'environnement Vite (fichier `.env.local`
- * en développement, ou variables Netlify / hébergeur en production) :
+ * Le projet Supabase de production d'Excellence Services SARL est intégré
+ * ci-dessous avec sa clé « publishable ». Cette clé est conçue pour être
+ * publique dans le navigateur : les données restent protégées par les
+ * politiques RLS et par la liste blanche `admin_users`. Grâce à ces valeurs
+ * par défaut, aucun réglage d'hébergeur (Netlify, LWS, etc.) n'est requis.
+ *
+ * Les variables Vite restent acceptées uniquement comme surcharge complète
+ * pour utiliser un autre projet Supabase :
  *
  *   VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
- *   VITE_SUPABASE_ANON_KEY=eyJhbGciOi...   (clé "anon public" / "publishable")
+ *   VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
+ *   (ou VITE_SUPABASE_ANON_KEY avec l'ancienne clé anon)
  *
- * ⚠️ N'utilisez JAMAIS la clé `service_role` côté navigateur : elle
- * contourne toutes les protections (RLS). La clé anon est publique et
- * sûre tant que les politiques RLS du schéma SQL sont appliquées.
- *
- * Si les variables sont absentes, `supabase` vaut `null` et le site
- * fonctionne en mode "contenus par défaut" (aucun écran blanc).
+ * ⚠️ N'utilisez JAMAIS une clé `service_role` ou `sb_secret_...` côté
+ * navigateur : elle contournerait toutes les protections RLS.
  */
 
-const supabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
-const supabaseAnonKey = (
+const DEFAULT_SUPABASE_URL = 'https://jwmgrsoxzkgpviglrrwm.supabase.co';
+const DEFAULT_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_wMs4RT7D98TxA9NXNdRhyg_IfY7i1-m';
+
+const envSupabaseUrl = (import.meta.env.VITE_SUPABASE_URL as string | undefined)?.trim();
+const envSupabaseKey = (
   (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ||
   (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined)
 )?.trim();
+
+// Une surcharge n'est utilisée que si l'URL et la clé sont fournies ensemble.
+// Cela évite de mélanger accidentellement l'URL d'un projet et la clé d'un autre.
+const hasEnvConfig = Boolean(envSupabaseUrl && envSupabaseKey);
+const supabaseUrl = hasEnvConfig ? envSupabaseUrl : DEFAULT_SUPABASE_URL;
+const supabaseKey = hasEnvConfig ? envSupabaseKey : DEFAULT_SUPABASE_PUBLISHABLE_KEY;
 
 /**
  * Compte administrateur Supabase Auth associé à la connexion "mot de passe
@@ -36,16 +48,15 @@ export const ADMIN_LOGIN_EMAIL = (
 );
 
 export const SUPABASE_NOT_CONFIGURED_MESSAGE =
-  "Supabase n'est pas encore configuré : ajoutez VITE_SUPABASE_URL et VITE_SUPABASE_ANON_KEY (voir SUPABASE_SETUP.md), puis redéployez le site.";
+  'La connexion à Supabase est momentanément indisponible. Vérifiez votre connexion, puis réessayez.';
 
-function createSafeClient(): SupabaseClient | null {
-  if (!supabaseUrl || !supabaseAnonKey) return null;
+function createSafeClient(url?: string, key?: string): SupabaseClient | null {
+  if (!url || !key) return null;
   try {
-    // Une URL mal copiée dans Netlify ne doit jamais planter tout le site :
-    // on repasse en mode "contenus par défaut" avec un avertissement clair.
-    const parsed = new URL(supabaseUrl);
+    // Une configuration optionnelle invalide ne doit jamais planter le site.
+    const parsed = new URL(url);
     if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
-    return createClient(supabaseUrl, supabaseAnonKey, {
+    return createClient(url, key, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
@@ -53,12 +64,15 @@ function createSafeClient(): SupabaseClient | null {
       },
     });
   } catch (err) {
-    console.warn('[Supabase] Configuration invalide, mode contenus par défaut :', err);
+    console.warn('[Supabase] Configuration invalide :', err);
     return null;
   }
 }
 
-export const supabase: SupabaseClient | null = createSafeClient();
+// Si une surcharge d'environnement est invalide, revenir au projet officiel.
+export const supabase: SupabaseClient | null =
+  createSafeClient(supabaseUrl, supabaseKey) ??
+  (hasEnvConfig ? createSafeClient(DEFAULT_SUPABASE_URL, DEFAULT_SUPABASE_PUBLISHABLE_KEY) : null);
 export const isSupabaseConfigured = supabase !== null;
 
 if (!isSupabaseConfigured && import.meta.env.DEV) {
@@ -102,10 +116,10 @@ export function describeSupabaseError(err: unknown): string {
     return "Les tables Supabase sont introuvables : exécutez d'abord le script SQL fourni (supabase/migrations/) dans le SQL Editor de votre projet Supabase.";
   }
   if (/Failed to fetch|NetworkError|fetch failed/i.test(msg)) {
-    return "Impossible de contacter Supabase : vérifiez votre connexion Internet et la valeur de VITE_SUPABASE_URL.";
+    return 'Impossible de contacter Supabase : vérifiez votre connexion Internet, puis réessayez.';
   }
   if (/Invalid API key|JWT/i.test(msg)) {
-    return "Clé Supabase invalide : vérifiez VITE_SUPABASE_ANON_KEY (clé « anon public », pas la clé service_role).";
+    return 'La clé publique Supabase du site est invalide ou révoquée. Contactez l’administrateur technique.';
   }
   return msg;
 }

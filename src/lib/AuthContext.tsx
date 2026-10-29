@@ -50,8 +50,8 @@ function translateAuthError(err: any): string {
   }
   if (/Invalid email/i.test(msg)) return 'Format d’adresse email invalide.';
   if (/rate limit|too many/i.test(msg)) return 'Trop de tentatives. Veuillez réessayer dans quelques instants.';
-  if (/Failed to fetch|NetworkError/i.test(msg)) return 'Impossible de contacter Supabase. Vérifiez votre connexion et VITE_SUPABASE_URL.';
-  if (/Invalid API key/i.test(msg)) return 'Clé Supabase invalide : vérifiez VITE_SUPABASE_ANON_KEY.';
+  if (/Failed to fetch|NetworkError/i.test(msg)) return 'Impossible de contacter Supabase. Vérifiez votre connexion Internet, puis réessayez.';
+  if (/Invalid API key/i.test(msg)) return 'La clé publique Supabase du site est invalide ou révoquée. Contactez l’administrateur technique.';
   if (/provider is not enabled|Unsupported provider/i.test(msg)) {
     return 'La connexion Google n’est pas activée dans Supabase (Authentication → Providers → Google). Utilisez le mot de passe administrateur.';
   }

@@ -390,13 +390,11 @@ export const AdminPage: React.FC = () => {
             {!isSupabaseConfigured && (
               <div className="p-3.5 rounded-xl bg-amber-50 dark:bg-amber-950/50 border border-amber-300 dark:border-amber-500/40 text-xs text-amber-800 dark:text-amber-200 space-y-1.5">
                 <p className="font-bold flex items-center gap-1.5">
-                  <AlertCircle className="w-4 h-4 shrink-0" /> Supabase n’est pas encore configuré sur ce site
+                  <AlertCircle className="w-4 h-4 shrink-0" /> Connexion à Supabase indisponible
                 </p>
                 <p>
-                  Ajoutez <code className="font-mono font-semibold">VITE_SUPABASE_URL</code> et{' '}
-                  <code className="font-mono font-semibold">VITE_SUPABASE_ANON_KEY</code>, exécutez le script SQL
-                  fourni, créez le compte admin avec votre mot de passe dans Supabase, puis redéployez. Guide :{' '}
-                  <strong>SUPABASE_SETUP.md</strong>.
+                  Le site affiche ses contenus de secours. Vérifiez votre connexion Internet, puis rechargez la
+                  page. Si le problème persiste, contactez l’administrateur technique.
                 </p>
               </div>
             )}
@@ -1147,7 +1145,7 @@ export const AdminPage: React.FC = () => {
                   <ol className="list-decimal pl-5 space-y-1 text-gray-200">
                     <li>Supabase → SQL Editor : exécuter le script <code className="font-mono text-[#D4AF37]">supabase/migrations/20261029120000_initial_schema.sql</code> (et y indiquer votre email admin).</li>
                     <li>Supabase → Authentication → Users : créer le compte administrateur technique avec votre mot de passe (celui saisi ici, sans email à taper), puis désactiver les inscriptions publiques.</li>
-                    <li>Hébergeur : renseigner <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_URL</code> et <code className="font-mono text-[#D4AF37]">VITE_SUPABASE_ANON_KEY</code>, puis redéployer le site.</li>
+                    <li>La configuration publique Supabase est intégrée au code : aucun réglage d’hébergeur n’est requis, déployez simplement la dernière version du site.</li>
                     <li>Connectez-vous ici : les contenus par défaut sont importés automatiquement dans Supabase. Détail complet dans le fichier SUPABASE_SETUP.md du projet.</li>
                   </ol>
                   <p className="text-amber-300">Sécurité : l’ancien mot de passe partagé a été supprimé. Seuls les comptes présents dans la table admin_users peuvent modifier le site ; les visiteurs ne voient jamais les devis et messages reçus.</p>

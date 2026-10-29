@@ -13,14 +13,15 @@ Ce projet est 100% prêt à être déployé sur **Netlify**.
    - **Build command** : `npm run build`
    - **Publish directory** : `dist`
    - **Functions directory** : `netlify/functions`
-5. Dans la section **Environment variables** (Variables d'environnement), ajoutez :
-   - `VITE_SUPABASE_URL` : l'URL de votre projet Supabase (Project Settings → API).
-   - `VITE_SUPABASE_ANON_KEY` : la clé publique « anon » Supabase.
+5. **Supabase : aucune variable Netlify à ajouter.** L'URL du projet officiel
+   et sa clé « publishable » publique sont intégrées dans le code
+   (`src/lib/supabase.ts`), donc l'espace `/admin` se connecte automatiquement.
+   Ajoutez seulement, si vous utilisez l'assistant IA :
    - `GEMINI_API_KEY` : votre clé d'API Google Gemini (fournie par Google AI Studio).
 
-   > ⚠️ Les variables `VITE_…` sont intégrées **au build** : après toute
-   > modification, relancez un déploiement. Voir **SUPABASE_SETUP.md** pour la
-   > mise en route complète de Supabase (SQL, compte admin, sécurité).
+   > Les variables `VITE_SUPABASE_*` restent possibles comme surcharge pour un
+   > autre projet Supabase, mais elles sont **optionnelles**. Voir
+   > **SUPABASE_SETUP.md** pour Supabase (SQL, compte admin, sécurité).
 6. Cliquez sur **"Deploy site"**. Votre site sera en ligne en moins d'une minute avec SSL HTTPS gratuit et nom de domaine personnalisé possible.
 
 ---
