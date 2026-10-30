@@ -42,7 +42,13 @@ export const TestimonialsSection: React.FC = () => {
         </div>
 
         {/* Horizontal Carousel */}
-        <HorizontalCarousel ariaLabel="Carrousel des témoignages clients">
+        <HorizontalCarousel
+          ariaLabel="Carrousel des témoignages clients"
+          autoScroll
+          autoScrollSpeed={20}
+          autoScrollDirection="forward"
+          autoScrollResumeDelay={4500}
+        >
           {activeTestimonials.map((t, idx) => (
             <motion.div
               key={t.id}

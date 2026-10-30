@@ -143,6 +143,59 @@ p {
   }
 }
 
+/*
+ * Bande Motion Design en défilement continu.
+ * La piste contient deux copies identiques : translater de -50 % crée une
+ * boucle parfaitement continue, uniquement sur le GPU (transform).
+ */
+@keyframes motion-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.motion-marquee-viewport {
+  --marquee-fade: 1.25rem;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black var(--marquee-fade),
+    black calc(100% - var(--marquee-fade)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    black var(--marquee-fade),
+    black calc(100% - var(--marquee-fade)),
+    transparent 100%
+  );
+}
+
+@media (min-width: 640px) {
+  .motion-marquee-viewport {
+    --marquee-fade: 4rem;
+  }
+}
+
+.motion-marquee-track {
+  animation: motion-marquee var(--marquee-duration, 44s) linear infinite;
+  will-change: transform;
+}
+
+.motion-marquee-track-reverse {
+  animation-direction: reverse;
+}
+
+.motion-marquee:hover .motion-marquee-track,
+.motion-marquee:focus-within .motion-marquee-track,
+.motion-marquee[data-paused="true"] .motion-marquee-track {
+  animation-play-state: paused;
+}
+
 /* Verrouillage strict de tout débordement horizontal involontaire */
 html {
   overflow-x: hidden;
@@ -246,5 +299,18 @@ body.mobile-menu-open {
   *::before,
   *::after {
     transition-duration: 0.01ms !important;
+  }
+
+  /* La bande devient une rangée statique que l'on peut faire défiler à la main. */
+  .motion-marquee-track {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .motion-marquee-viewport {
+    overflow-x: auto;
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
