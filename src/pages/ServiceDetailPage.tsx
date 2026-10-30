@@ -2,7 +2,6 @@ import React from 'react';
 import { ArrowLeft, Sparkles, Check, ArrowRight, MessageSquare } from 'lucide-react';
 import { useRouter } from '../lib/router';
 import { useSiteData } from '../lib/DataContext';
-import { SERVICES, SECTORS } from '../data/company';
 import { SITE_MEDIA_CATALOG } from '../data/media';
 import { LOCAL_IMAGES } from '../data/images';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -13,10 +12,12 @@ interface ServiceDetailPageProps {
 
 export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug }) => {
   const { navigate } = useRouter();
-  const { services, media, settings } = useSiteData();
+  const { services, sectors, media, settings } = useSiteData();
 
-  const serviceList = services.length > 0 ? services : SERVICES;
-  const service = serviceList.find((s) => s.slug === slug);
+  const service = services.find(
+    (s) => s.slug === slug && (!s.status || s.status === 'active')
+  );
+  const activeSectors = sectors.filter((s) => !s.status || s.status === 'active');
 
   if (!service) {
     return (
@@ -141,7 +142,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ slug }) =>
             Secteurs cibles particulièrement concernés
           </h3>
           <div className="flex flex-wrap gap-2">
-            {SECTORS.map((sec) => (
+            {activeSectors.map((sec) => (
               <span
                 key={sec.id}
                 className="px-3.5 py-1.5 rounded-xl bg-white dark:bg-[#01184C] border border-[#DDE4EE] dark:border-white/10 text-xs font-semibold text-[#0E1D38] dark:text-slate-200"

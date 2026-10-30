@@ -41,12 +41,16 @@ export const MotionShowcase: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
 
   const activeServices = useMemo(
-    () => services.filter((service) => service.status !== 'hidden'),
+    () => services.filter((service) => !service.status || service.status === 'active'),
     [services],
+  );
+  const activeSectors = useMemo(
+    () => sectors.filter((sector) => !sector.status || sector.status === 'active'),
+    [sectors],
   );
 
   const serviceSequence = useMemo(() => buildSequence(activeServices, 12), [activeServices]);
-  const sectorSequence = useMemo(() => buildSequence(sectors, 16), [sectors]);
+  const sectorSequence = useMemo(() => buildSequence(activeSectors, 16), [activeSectors]);
 
   if (activeServices.length === 0) return null;
 
@@ -152,7 +156,7 @@ export const MotionShowcase: React.FC = () => {
         {t('motion.services_label', 'Prestations')} :{' '}
         {activeServices.map((service) => getServiceTitle(service)).join(', ')}.{' '}
         {t('motion.sectors_label', 'Secteurs accompagnés')} :{' '}
-        {sectors.map((sector) => sector.name).join(', ')}.
+        {activeSectors.map((sector) => sector.name).join(', ')}.
       </p>
 
       <div className="relative mt-8 space-y-5" aria-hidden="true">
@@ -173,7 +177,7 @@ export const MotionShowcase: React.FC = () => {
           </div>
         </div>
 
-        {sectors.length > 0 && (
+        {activeSectors.length > 0 && (
           <div>
             <p className="mx-auto mb-3 max-w-7xl px-4 text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#D4AF37]/80 sm:px-6 lg:px-8">
               {t('motion.sectors_label', 'Secteurs accompagnés')}

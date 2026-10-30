@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Sparkles,
@@ -18,7 +18,6 @@ import {
   Check,
 } from 'lucide-react';
 import { useSiteData } from '../lib/DataContext';
-import { SERVICES, SECTORS } from '../data/company';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
 interface QuotePageProps {
@@ -45,16 +44,16 @@ const STEPS_LABELS = ['Votre besoin', 'Votre projet', 'Vos informations', 'Confi
 export const QuotePage: React.FC<QuotePageProps> = ({ initialService }) => {
   const { services, sectors, submitQuote } = useSiteData();
 
-  const serviceList = services.length > 0 ? services.filter((s) => s.status !== 'hidden') : SERVICES;
-  const sectorList = sectors.length > 0 ? sectors.filter((s) => s.status !== 'hidden') : SECTORS;
+  const serviceList = services.filter((s) => !s.status || s.status === 'active');
+  const sectorList = sectors.filter((s) => !s.status || s.status === 'active');
 
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const [formData, setFormData] = useState({
-    service: initialService || serviceList[0]?.title || SERVICES[0].title,
-    sector: sectorList[0]?.name || SECTORS[0].name,
+    service: initialService || serviceList[0]?.title || '',
+    sector: sectorList[0]?.name || '',
     description: '',
     budget: 'Non spécifié / À évaluer',
     timeline: 'Dès que possible (< 1 mois)',
@@ -66,6 +65,28 @@ export const QuotePage: React.FC<QuotePageProps> = ({ initialService }) => {
     phone: '',
     whatsapp: '',
   });
+
+  // Si l'admin renomme, masque ou supprime le service/secteur sélectionné
+  // pendant que ce formulaire est ouvert, on bascule sur une valeur valide.
+  const serviceTitlesKey = serviceList.map((s) => s.title).join('|');
+  const sectorNamesKey = sectorList.map((s) => s.name).join('|');
+  useEffect(() => {
+    setFormData((prev) => {
+      const nextService = serviceList.some((s) => s.title === prev.service)
+        ? prev.service
+        : initialService && serviceList.some((s) => s.title === initialService)
+          ? initialService
+          : serviceList[0]?.title || '';
+      const nextSector = sectorList.some((s) => s.name === prev.sector)
+        ? prev.sector
+        : sectorList[0]?.name || '';
+      return nextService === prev.service && nextSector === prev.sector
+        ? prev
+        : { ...prev, service: nextService, sector: nextSector };
+    });
+    // Les clés textuelles évitent de relancer l'effet à chaque rendu.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialService, serviceTitlesKey, sectorNamesKey]);
 
   const validateStep = (s: number) => {
     const errs: Record<string, string> = {};
@@ -658,8 +679,8 @@ export const QuotePage: React.FC<QuotePageProps> = ({ initialService }) => {
                     onClick={() => {
                       setStep(1);
                       setFormData({
-                        service: serviceList[0]?.title || SERVICES[0].title,
-                        sector: sectorList[0]?.name || SECTORS[0].name,
+                        service: serviceList[0]?.title || '',
+                        sector: sectorList[0]?.name || '',
                         description: '',
                         budget: 'Non spécifié / À évaluer',
                         timeline: 'Dès que possible (< 1 mois)',

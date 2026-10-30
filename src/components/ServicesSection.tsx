@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { useRouter } from '../lib/router';
 import { useSiteData } from '../lib/DataContext';
@@ -14,7 +14,20 @@ export const ServicesSection: React.FC = () => {
   const { t } = useLanguage();
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
 
-  const activeServices = services.filter((s) => s.status !== 'hidden');
+  const activeServices = services.filter((s) => !s.status || s.status === 'active');
+
+  // La fiche rapide ouverte suit les modifications temps réel et se ferme
+  // si le service est supprimé, masqué ou repassé en brouillon.
+  useEffect(() => {
+    setSelectedService((prev) => {
+      if (!prev) return prev;
+      const current = services.find(
+        (s) => s.id === prev.id && (!s.status || s.status === 'active')
+      );
+      if (!current) return null;
+      return JSON.stringify(current) === JSON.stringify(prev) ? prev : current;
+    });
+  }, [services]);
 
   return (
     <section

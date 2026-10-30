@@ -18,7 +18,6 @@ import {
 import { useSiteData } from '../lib/DataContext';
 import { useRouter } from '../lib/router';
 import { useLanguage } from '../hooks/useLanguage';
-import { SECTORS } from '../data/company';
 import { SITE_MEDIA_CATALOG } from '../data/media';
 import { LOCAL_IMAGES } from '../data/images';
 import { HorizontalCarousel } from './HorizontalCarousel';
@@ -49,7 +48,7 @@ export const SectorExplorer: React.FC = () => {
   const { sectors, media } = useSiteData();
   const { t, isEnglish } = useLanguage();
 
-  const sectorList = sectors.length > 0 ? sectors : SECTORS;
+  const sectorList = sectors.filter((sector) => !sector.status || sector.status === 'active');
 
   return (
     <section

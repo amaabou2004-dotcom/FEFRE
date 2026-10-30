@@ -108,13 +108,19 @@ téléversez le nouveau package : il contient déjà la configuration publique.
 
 1. Ouvrez `https://votre-site/admin`.
 2. Saisissez **uniquement votre mot de passe** (celui de l'étape 3) → « Accéder à l'espace admin ».
-3. Le bandeau du tableau de bord indique **« Supabase connecté »** et les
-   contenus actuels du site sont **importés automatiquement** dans les tables
-   (bouton « Importer les contenus par défaut » si besoin).
-4. Vérifiez dans Supabase → **Table Editor** : les services, FAQ, etc. sont là.
-5. Testez : modifiez un texte dans l'admin → le site public se met à jour sans
-   rechargement. Envoyez un devis test depuis `/devis` → il apparaît dans
-   l'onglet **Devis & Messages**.
+3. Le bandeau en haut de l'espace admin indique **« Temps réel actif »** ainsi
+   que l'heure de la dernière synchronisation réussie.
+4. Sur une base **entièrement neuve**, les contenus actuels du site sont
+   importés automatiquement dans les tables. Une fois le site initialisé,
+   l'import automatique est désactivé : si vous supprimez volontairement tous
+   les éléments d'une collection (par exemple tous les partenaires), ils ne
+   réapparaîtront pas à la connexion suivante. Le bouton **« Réinitialiser »**
+   reste le seul moyen de réimporter explicitement les contenus par défaut.
+5. Vérifiez dans Supabase → **Table Editor** : les services, FAQ, etc. sont là.
+6. Testez : laissez une page publique ouverte dans un autre onglet, puis
+   modifiez, masquez ou supprimez un élément dans l'admin → la page publique
+   se met à jour sans rechargement. Envoyez un devis test depuis `/devis` →
+   il apparaît dans l'onglet **Devis & Messages**.
 
 ---
 
@@ -150,14 +156,18 @@ emplacement (ex. `hero-main`).
 | « Mot de passe incorrect » | Le mot de passe tapé ≠ celui du compte de l'étape 3 (ou compte non créé / email technique différent sans `VITE_ADMIN_EMAIL`) | Étape 3 ; vérifiez « Auto Confirm » et, si besoin, `VITE_ADMIN_EMAIL` |
 | « Permission refusée (RLS) » à l'enregistrement | Compte absent de `admin_users`, ou session expirée | Section 5 du SQL, puis reconnectez-vous |
 | Le devis test n'arrive pas | Ancien déploiement ou projet Supabase injoignable | Redéployer la dernière version du code et vérifier Supabase |
+| Un élément supprimé réapparaît | Ancien déploiement dont l'amorçage réimportait les collections vides | Redéployer la version avec le garde-fou d'initialisation ; vérifier ensuite la table concernée dans Supabase |
+| Bandeau « Temps réel à reconnecter » | WebSocket interrompu ou réseau instable | Attendre la reconnexion automatique ou cliquer sur **Synchroniser** ; le site se resynchronise aussi au retour sur l'onglet et au maximum toutes les 60 secondes |
 
 ## Ce qui a changé dans le code
 
 - `src/lib/supabase.ts` : client Supabase avec configuration publique officielle
   intégrée (surcharge `VITE_…` optionnelle) + messages d'erreur en français.
 - `src/lib/supabase-mappers.ts` : traduction colonnes SQL ⇄ objets du site.
-- `src/lib/DataContext.tsx` : données du site via Supabase (même interface
-  qu'avant — aucune page publique modifiée, sauf les Actualités branchées).
+- `src/lib/DataContext.tsx` : données du site via Supabase, temps réel avec
+  reconnexion/resynchronisation automatique et remplacement exact des
+  collections — une collection vide dans Supabase s'affiche donc vide, sans
+  retour des contenus intégrés au code.
 - `src/lib/AuthContext.tsx` : connexion admin **par mot de passe uniquement**
   (session Supabase Auth sur le compte technique invisible `ADMIN_LOGIN_EMAIL`)
   avec contrôle `admin_users`.

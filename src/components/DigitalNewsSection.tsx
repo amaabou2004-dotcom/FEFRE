@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Newspaper,
@@ -15,7 +15,6 @@ import {
 } from 'lucide-react';
 import { useRouter } from '../lib/router';
 import { useLanguage } from '../hooks/useLanguage';
-import { BLOG_ARTICLES } from '../data/articles';
 import { useSiteData } from '../lib/DataContext';
 import { ArticleItem } from '../types';
 
@@ -25,11 +24,20 @@ export const DigitalNewsSection: React.FC = () => {
   const [selectedArticle, setSelectedArticle] = useState<ArticleItem | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
 
-  // Articles gérés dans Supabase (repli sur les articles intégrés au code)
+  // Articles gérés dans Supabase (le contexte gère le contenu initial).
   const { articles } = useSiteData();
-  const latestArticles = (articles.length ? articles : BLOG_ARTICLES)
-    .filter((a) => a.status !== 'draft')
-    .slice(0, 3);
+  const latestArticles = articles.filter((a) => a.status !== 'draft').slice(0, 3);
+
+  // Le lecteur ouvert suit les modifications temps réel et se ferme si
+  // l'article est supprimé ou repassé en brouillon dans l'espace admin.
+  useEffect(() => {
+    setSelectedArticle((prev) => {
+      if (!prev) return prev;
+      const current = articles.find((a) => a.id === prev.id && a.status !== 'draft');
+      if (!current) return null;
+      return JSON.stringify(current) === JSON.stringify(prev) ? prev : current;
+    });
+  }, [articles]);
 
   const handleShare = (article: ArticleItem) => {
     if (navigator.clipboard) {
