@@ -48,7 +48,12 @@ export const PartnersSection: React.FC = () => {
         </div>
 
         {/* Horizontal Carousel */}
-        <HorizontalCarousel ariaLabel="Carrousel des partenaires">
+        <HorizontalCarousel
+          ariaLabel="Carrousel des partenaires"
+          autoScroll
+          autoScrollSpeed={26}
+          autoScrollDirection="reverse"
+        >
           {activePartners.map((partner, idx) => (
             <motion.div
               key={partner.id}

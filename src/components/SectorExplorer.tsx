@@ -86,7 +86,12 @@ export const SectorExplorer: React.FC = () => {
         </div>
 
         {/* Horizontal Carousel */}
-        <HorizontalCarousel ariaLabel="Carrousel des secteurs d'activité">
+        <HorizontalCarousel
+          ariaLabel="Carrousel des secteurs d'activité"
+          autoScroll
+          autoScrollSpeed={30}
+          autoScrollDirection="reverse"
+        >
           {sectorList.map((sector, idx) => {
             const IconComp = SECTOR_ICONS[sector.iconName] || ShieldCheck;
             const mediaKey = SECTOR_MEDIA_MAP[sector.id] || `sector-${sector.id}`;

@@ -51,7 +51,12 @@ export const ServicesSection: React.FC = () => {
         </div>
 
         {/* Horizontal Carousel of Services */}
-        <HorizontalCarousel ariaLabel="Carrousel des services Excellence Services">
+        <HorizontalCarousel
+          ariaLabel="Carrousel des services Excellence Services"
+          autoScroll
+          autoScrollSpeed={38}
+          autoScrollDirection="forward"
+        >
           {activeServices.map((service, idx) => (
             <ServiceCard
               key={service.id}

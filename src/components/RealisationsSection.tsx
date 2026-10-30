@@ -93,7 +93,13 @@ export const RealisationsSection: React.FC<RealisationsSectionProps> = ({
         )}
 
         {/* Horizontal Carousel of Projects */}
-        <HorizontalCarousel ariaLabel="Carrousel des réalisations">
+        <HorizontalCarousel
+          key={selectedCategory}
+          ariaLabel="Carrousel des réalisations"
+          autoScroll
+          autoScrollSpeed={34}
+          autoScrollDirection="forward"
+        >
           {filteredProjects.map((p: any, idx: number) => {
             const imageUrl =
               p.imageUrl ||

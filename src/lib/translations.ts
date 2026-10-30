@@ -63,6 +63,20 @@ export const TRANSLATIONS: TranslationDictionary = {
   'stats.stat4_label': { fr: 'Délai d’étude de devis', en: 'Quote turnaround time' },
   'stats.stat4_sub': { fr: 'Chiffrage express sur mesure', en: 'Express tailored quotation' },
 
+  // Motion Design Showcase
+  'motion.badge': { fr: 'Motion Design • En direct', en: 'Motion Design • Live' },
+  'motion.title': { fr: 'Nos prestations en mouvement', en: 'Our services in motion' },
+  'motion.description': {
+    fr: 'Un aperçu animé de nos pôles d’expertise et de nos secteurs d’intervention à Niamey.',
+    en: 'An animated overview of our practice areas and sectors of intervention in Niamey.',
+  },
+  'motion.pause': { fr: 'Pause', en: 'Pause' },
+  'motion.play': { fr: 'Lecture', en: 'Play' },
+  'motion.pause_animation': { fr: 'Mettre l’animation en pause', en: 'Pause the animation' },
+  'motion.play_animation': { fr: 'Reprendre l’animation', en: 'Resume the animation' },
+  'motion.services_label': { fr: 'Prestations', en: 'Services' },
+  'motion.sectors_label': { fr: 'Secteurs accompagnés', en: 'Sectors we support' },
+
   // Services Section
   'services.badge': { fr: "Solutions & Pôles d'Expertise", en: 'Solutions & Practice Areas' },
   'services.title': { fr: 'Une suite complète de solutions pour votre transformation opérationnelle.', en: 'A comprehensive suite of solutions for your operational transformation.' },

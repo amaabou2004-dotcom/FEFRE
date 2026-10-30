@@ -1,6 +1,7 @@
 import React from 'react';
 import { Hero } from '../components/Hero';
 import { TrustStats } from '../components/TrustStats';
+import { MotionShowcase } from '../components/MotionShowcase';
 import { ServicesSection } from '../components/ServicesSection';
 import { AboutPreview } from '../components/AboutPreview';
 import { SectorExplorer } from '../components/SectorExplorer';
@@ -19,6 +20,9 @@ export const HomePage: React.FC = () => {
 
       {/* 1.5. Chiffres clés & Réassurance */}
       <TrustStats />
+
+      {/* 1.75. Motion Design : prestations et secteurs en défilement automatique */}
+      <MotionShowcase />
 
       {/* 2. Services (Horizontal Carousel) */}
       <ServicesSection />
