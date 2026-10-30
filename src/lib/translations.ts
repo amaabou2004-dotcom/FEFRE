@@ -322,6 +322,8 @@ export const TRANSLATIONS: TranslationDictionary = {
   'footer.col_legal': { fr: 'Informations Légales', en: 'Legal Information' },
   'footer.col_contact': { fr: 'Siège & Contact', en: 'Headquarters & Contact' },
   'footer.rights': { fr: 'Tous droits réservés.', en: 'All rights reserved.' },
+  'footer.developer_label': { fr: 'Conception & développement', en: 'Design & development' },
+  'footer.developer_role': { fr: 'Développeur', en: 'Developer' },
   'footer.mentions': { fr: 'Mentions Légales & RCCM', en: 'Legal Notice & RCCM' },
   'footer.privacy': { fr: 'Protection des Données & Confidentialité', en: 'Data Protection & Privacy Policy' },
   'footer.theme_label': { fr: 'Thème du site :', en: 'Site theme:' },

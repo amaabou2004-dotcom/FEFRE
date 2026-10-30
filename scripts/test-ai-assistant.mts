@@ -63,6 +63,12 @@ const iso = fallback('Êtes-vous certifiés ISO 9001 ?');
 assert.match(iso, /ne mentionnent pas de certification ISO publiée/);
 assert.doesNotMatch(iso, /VES-2025-001/);
 
+// Signature publique du site dans le pied de page.
+const websiteDeveloper = fallback('Qui a développé ce site ?');
+assert.match(websiteDeveloper, /Amadou Aboubakar/);
+assert.match(websiteDeveloper, /Développeur/);
+assert.match(websiteDeveloper, /Conception & développement/);
+
 assert.equal(validateAIResponse('Appelez-nous au +227 11 22 33 44.', ctx).ok, false);
 assert.equal(validateAIResponse('Le service coûte 500000 FCFA.', ctx).ok, false);
 assert.equal(validateAIResponse('Notre support est disponible 24/7.', ctx).ok, false);

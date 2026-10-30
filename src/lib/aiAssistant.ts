@@ -45,6 +45,7 @@ export interface AISiteContext {
     shopNotice: string;
     facebook?: string;
     tiktok?: string;
+    websiteDeveloper: string;
   };
   services: Array<{
     number: string;
@@ -132,6 +133,7 @@ export const DEFAULT_AI_CONTEXT: AISiteContext = {
     shopNotice: "Notre boutique officielle et catalogue d'équipements spécialisés est actuellement en préparation.",
     facebook: 'https://www.facebook.com/share/18nx1djJnt/?mibextid=wwXIfr',
     tiktok: 'https://www.tiktok.com/@excellenceservices?_r=1&_t=ZS-99nADDdMPcS',
+    websiteDeveloper: 'Amadou Aboubakar',
   },
   services: [
     {
@@ -455,6 +457,7 @@ export function normalizeAISiteContext(input: unknown): AISiteContext {
       'shopNotice',
       'facebook',
       'tiktok',
+      'websiteDeveloper',
     ];
     stringFields.forEach((field) => {
       const value = cleanAIText(company[field as string], field === 'about' || field === 'mission' ? 1200 : 500);
@@ -1379,6 +1382,42 @@ export function buildDeterministicAIReply(
     (hasAny(q, ['certificat', 'certificats', 'certification', 'certifications', 'certifie', 'certifiee', 'reconnaissance', 'certificate', 'certificates', 'certified']) &&
       !/\biso\b/.test(q));
   if (asksRecognition && context.recognitions.length > 0) return recognitionReply(context, language);
+
+  const asksWebsiteDeveloper = hasAny(q, [
+    'qui a developpe ce site',
+    'qui a developpe le site',
+    'qui a cree ce site',
+    'qui a cree le site',
+    'qui a realise ce site',
+    'qui a realise le site',
+    'qui a concu ce site',
+    'qui a concu le site',
+    'developpeur du site',
+    'developpeur de ce site',
+    'qui est le developpeur du site',
+    'nom du developpeur du site',
+    'developpe par qui',
+    'site developpe par',
+    'signature du site',
+    'who developed this website',
+    'who built this website',
+    'who created this website',
+    'who designed this website',
+    'who is the website developer',
+    'website developer name',
+  ]);
+  if (asksWebsiteDeveloper) {
+    return makeReply(
+      tx(
+        language,
+        `Le site d’**${c.name}** est signé **${c.websiteDeveloper} — Développeur**. Sa signature figure dans le pied de page du site, sous la mention « Conception & développement ».`,
+        `The **${c.name}** website is signed **${c.websiteDeveloper} — Developer**. The signature appears in the website footer under “Design & development.”`,
+      ),
+      'developer',
+      language,
+      context,
+    );
+  }
 
   let serviceMatch = findServiceMatch(message, context) || findServiceMatch(effectiveMessage, context);
   const currentPageService = context.currentPage
