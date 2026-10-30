@@ -71,6 +71,14 @@ export interface AISiteContext {
     status: string;
   }>;
   partners: Array<{ name: string; category: string; description: string }>;
+  recognitions: Array<{
+    title: string;
+    issuer: string;
+    certificateNumber: string;
+    issueDate: string;
+    summary: string;
+    verificationUrl?: string;
+  }>;
   articles: Array<{ title: string; category: string; summary: string; slug: string }>;
   pages: Array<{ slug: string; name: string; title: string; subtitle: string; content: string }>;
   methodology: Array<{ title: string; subtitle: string; description: string; details: string[] }>;
@@ -349,6 +357,17 @@ export const DEFAULT_AI_CONTEXT: AISiteContext = {
     { name: 'Sahel Telecom Services', category: 'Télécommunications & Voix', description: 'Réseaux d’interconnexion SIP et liaisons data spécialisées.' },
     { name: 'Niger Logistique Express', category: 'Transport & Messagerie', description: 'Distribution et gestion logistique du dernier kilomètre.' },
   ],
+  recognitions: [
+    {
+      title: 'Official Certificate of Satisfaction and Recognition',
+      issuer: 'Viva Nation Limited t/a Vivape | VivaeSIM',
+      certificateNumber: 'VES-2025-001',
+      issueDate: '2026-06-03',
+      summary:
+        "VivaeSIM a décerné cette attestation à Excellence Services SARL pour sa contribution remarquable, son dévouement, son professionnalisme et la réussite de la collaboration dans la promotion, la commercialisation et le développement du service VivaeSIM. Le certificat confirme la pleine satisfaction de VivaeSIM quant à la qualité du service, à la coopération et à la performance d'Excellence Services SARL. Il s'agit d'une attestation de satisfaction d'un partenaire, et non d'une certification ISO.",
+      verificationUrl: 'https://www.vivaesim.com/verify',
+    },
+  ],
   articles: [],
   pages: [],
   methodology: [
@@ -519,6 +538,20 @@ export function normalizeAISiteContext(input: unknown): AISiteContext {
       }))
       .filter((partner) => partner.name)
       .slice(0, 16);
+  }
+
+  if (Array.isArray(raw.recognitions)) {
+    context.recognitions = raw.recognitions
+      .map((recognition: any) => ({
+        title: cleanAIText(recognition?.title, 220),
+        issuer: cleanAIText(recognition?.issuer, 220),
+        certificateNumber: cleanAIText(recognition?.certificateNumber, 80),
+        issueDate: cleanAIText(recognition?.issueDate, 40),
+        summary: cleanAIText(recognition?.summary, 900),
+        verificationUrl: cleanAIText(recognition?.verificationUrl, 300) || undefined,
+      }))
+      .filter((recognition) => recognition.title && recognition.issuer)
+      .slice(0, 8);
   }
 
   if (Array.isArray(raw.articles)) {
@@ -700,6 +733,8 @@ export function getAISuggestions(topic: string, language: AILanguage, context: A
         return ['What services do you offer?', 'How can I request a quote?', 'Which sectors do you support?'];
       case 'sectors':
         return context.sectors.slice(0, 3).map((sector) => `What do you offer for the ${sector.name} sector?`);
+      case 'recognition':
+        return ['What services do you offer?', 'What projects have you delivered?', 'How can I request a quote?'];
       default:
         return ['What services do you offer?', 'How can I request a quote?', 'Which sectors do you support?'];
     }
@@ -716,6 +751,8 @@ export function getAISuggestions(topic: string, language: AILanguage, context: A
       return ['Quels sont vos services ?', 'Comment demander un devis ?', 'Quels secteurs accompagnez-vous ?'];
     case 'sectors':
       return context.sectors.slice(0, 3).map((sector) => `Que proposez-vous pour le secteur ${sector.name} ?`);
+    case 'recognition':
+      return ['Quels sont vos services ?', 'Quelles réalisations avez-vous menées ?', 'Comment obtenir un devis ?'];
     default:
       return ['Quels sont vos services ?', 'Comment obtenir un devis ?', 'Quels secteurs accompagnez-vous ?'];
   }
@@ -1076,6 +1113,22 @@ function quoteReply(context: AISiteContext, language: AILanguage, service?: AISi
   );
 }
 
+function recognitionReply(context: AISiteContext, language: AILanguage): AIKnowledgeReply {
+  const recognition = context.recognitions[0];
+  const issueDate = language === 'en' ? '3 June 2026' : '3 juin 2026';
+
+  return makeReply(
+    tx(
+      language,
+      `Oui. Le site publie l’**${recognition.title}** n° **${recognition.certificateNumber}**, délivré le **${issueDate}** par **${recognition.issuer}** à **Excellence Services SARL**.\n\nLe certificat reconnaît la contribution, le professionnalisme et la réussite de la collaboration d’Excellence Services SARL dans la promotion, la commercialisation et le développement du service VivaeSIM. VivaeSIM y confirme sa pleine satisfaction quant à la qualité du service, à la coopération et à la performance fournies.\n\nIl s’agit d’une **attestation de satisfaction d’un partenaire**, et non d’une certification ISO. Vous pouvez consulter le document dans la section « Reconnaissance officielle » de la [page À propos](${context.routes.about}).`,
+      `Yes. The website publishes the **${recognition.title}** no. **${recognition.certificateNumber}**, issued on **${issueDate}** by **${recognition.issuer}** to **Excellence Services SARL**.\n\nThe certificate recognizes Excellence Services SARL’s outstanding contribution, dedication, professionalism and successful collaboration in the promotion, commercialization and market development of the VivaeSIM service. VivaeSIM confirms its full satisfaction with the quality of service, cooperation and performance provided.\n\nThis is a **partner satisfaction and recognition certificate**, not an ISO certification. You can view the document in the “Official recognition” section of the [About page](${context.routes.about}).`,
+    ),
+    'recognition',
+    language,
+    context,
+  );
+}
+
 function unknownFactReply(context: AISiteContext, language: AILanguage, subjectFr: string, subjectEn: string): AIKnowledgeReply {
   const c = context.company;
   return makeReply(
@@ -1305,6 +1358,27 @@ export function buildDeterministicAIReply(
   if (asksAddress && !asksPhone) return contactReply(context, language, 'address');
   if (asksPhone && !asksContact) return contactReply(context, language, 'phone');
   if (asksContact) return contactReply(context, language, 'full');
+
+  const asksRecognition =
+    hasAny(q, [
+      'vivaesim',
+      'viva nation',
+      'attestation',
+      'attestations',
+      'certificat de satisfaction',
+      'certificat officiel',
+      'reconnaissance officielle',
+      'distinction',
+      'distinctions',
+      'official certificate',
+      'certificate of satisfaction',
+      'recognition certificate',
+      'award',
+      'awards',
+    ]) ||
+    (hasAny(q, ['certificat', 'certificats', 'certification', 'certifications', 'certifie', 'certifiee', 'reconnaissance', 'certificate', 'certificates', 'certified']) &&
+      !/\biso\b/.test(q));
+  if (asksRecognition && context.recognitions.length > 0) return recognitionReply(context, language);
 
   let serviceMatch = findServiceMatch(message, context) || findServiceMatch(effectiveMessage, context);
   const currentPageService = context.currentPage
@@ -1752,6 +1826,7 @@ export function buildAISystemInstruction(
     faqs: context.faqs,
     projects: context.projects,
     partners: context.partners,
+    recognitions: context.recognitions,
     articles: context.articles,
     pages: context.pages,
     methodology: context.methodology,
@@ -1865,7 +1940,11 @@ export function validateAIResponse(reply: string, context: AISiteContext, userMe
         if (!parsed.pathname.replace(/\D/g, '').endsWith(digits(context.company.whatsappRaw).slice(-11))) return { ok: false, reason: 'unknown-whatsapp' };
         continue;
       }
-      const allowedExternal = [context.company.facebook, context.company.tiktok].filter(Boolean) as string[];
+      const allowedExternal = [
+        context.company.facebook,
+        context.company.tiktok,
+        ...context.recognitions.map((recognition) => recognition.verificationUrl),
+      ].filter(Boolean) as string[];
       if (!allowedExternal.some((allowed) => url === allowed || url.startsWith(allowed.split('?')[0]))) {
         return { ok: false, reason: 'unknown-external-url' };
       }

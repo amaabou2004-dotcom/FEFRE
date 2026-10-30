@@ -137,7 +137,7 @@ export const DownloadPage: React.FC = () => {
                   Archive Standard <code className="text-sm font-mono text-[#D4AF37]">public_html</code>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-public_html.zip</span> (~2,2 Mo)
+                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-public_html.zip</span> (~2,6 Mo)
                 </p>
               </div>
 
@@ -215,7 +215,7 @@ export const DownloadPage: React.FC = () => {
                   Archive Node.js <code className="text-sm font-mono text-slate-500">cPanel App</code>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-nodejs.zip</span> (~2,3 Mo)
+                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-nodejs.zip</span> (~2,7 Mo)
                 </p>
               </div>
 

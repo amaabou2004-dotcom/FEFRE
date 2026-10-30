@@ -225,6 +225,35 @@ export const TRANSLATIONS: TranslationDictionary = {
   },
   'testimonials.rating': { fr: 'Note 5.0 / 5', en: 'Rating 5.0 / 5' },
 
+  // Official recognition certificate
+  'recognition.badge': { fr: 'Reconnaissance officielle', en: 'Official recognition' },
+  'recognition.title': { fr: 'VivaeSIM salue la qualité de notre collaboration', en: 'VivaeSIM recognizes the quality of our collaboration' },
+  'recognition.desc': {
+    fr: "Viva Nation Limited, opérant sous les marques Vivape et VivaeSIM, a décerné à Excellence Services SARL son « Official Certificate of Satisfaction and Recognition ». Le document salue notre contribution à la promotion, à la commercialisation et au développement du service VivaeSIM, ainsi que notre professionnalisme et la réussite de la collaboration.",
+    en: 'Viva Nation Limited, trading as Vivape | VivaeSIM, awarded Excellence Services SARL its “Official Certificate of Satisfaction and Recognition.” The document recognizes our outstanding contribution, dedication, professionalism and successful collaboration in the promotion, commercialization and market development of the VivaeSIM service.',
+  },
+  'recognition.quote': {
+    fr: '« VivaeSIM confirme sa pleine satisfaction quant à la qualité du service, à la coopération et à la performance d’Excellence Services SARL. »',
+    en: '“VivaeSIM is pleased to confirm our full satisfaction with the quality of service, cooperation, and performance provided by Excellence Services SARL.”',
+  },
+  'recognition.issuer_label': { fr: 'Émetteur', en: 'Issuer' },
+  'recognition.certificate_label': { fr: 'Certificat n°', en: 'Certificate no.' },
+  'recognition.date_label': { fr: 'Délivré le', en: 'Issue date' },
+  'recognition.signatory_label': { fr: 'Signataire', en: 'Signed by' },
+  'recognition.view': { fr: 'Voir l’attestation', en: 'View the certificate' },
+  'recognition.download': { fr: 'Télécharger', en: 'Download' },
+  'recognition.verify': { fr: 'Vérifier sur VivaeSIM', en: 'Verify on VivaeSIM' },
+  'recognition.zoom_hint': { fr: 'Cliquer pour agrandir', en: 'Click to enlarge' },
+  'recognition.caption': {
+    fr: 'Attestation officielle publiée telle que reçue de Viva Nation Limited (Vivape | VivaeSIM).',
+    en: 'Official certificate published as received from Viva Nation Limited (Vivape | VivaeSIM).',
+  },
+  'recognition.close': { fr: 'Fermer l’attestation', en: 'Close the certificate' },
+  'recognition.alt': {
+    fr: 'Certificat officiel de satisfaction et de reconnaissance VivaeSIM n° VES-2025-001 décerné à Excellence Services SARL le 3 juin 2026',
+    en: 'VivaeSIM Official Certificate of Satisfaction and Recognition no. VES-2025-001 awarded to Excellence Services SARL on 3 June 2026',
+  },
+
   // Digital News
   'news.badge': { fr: 'Veille & Perspectives', en: 'Market Insights & Trends' },
   'news.title': { fr: 'Actualités Digitales', en: 'Digital News' },

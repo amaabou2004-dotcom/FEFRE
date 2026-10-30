@@ -38,6 +38,8 @@ import contactDesk from '../assets/images/contact_desk_1789490027397.webp';
 import contactDeskMobile from '../assets/images/contact_desk_1789490027397-480w.webp';
 import aboutLeadership from '../assets/images/about_leadership_1789490084428.webp';
 import aboutLeadershipMobile from '../assets/images/about_leadership_1789490084428-480w.webp';
+import vivaesimCertificate from '../assets/images/vivaesim_official_certificate_2026.webp';
+import vivaesimCertificateMobile from '../assets/images/vivaesim_official_certificate_2026-720w.webp';
 
 export const LOCAL_IMAGES = {
   // Key sections
@@ -49,6 +51,8 @@ export const LOCAL_IMAGES = {
   approachImageMobile: approachStrategyMobile,
   contactImage: contactDesk,
   contactImageMobile: contactDeskMobile,
+  vivaesimCertificate,
+  vivaesimCertificateMobile,
 
   // Services - each with its own unique image
   serviceContactCenter: africanContactCenter,

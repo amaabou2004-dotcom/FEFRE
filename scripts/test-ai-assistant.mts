@@ -50,6 +50,19 @@ assert.match(followUp, /Aucun tarif fixe/);
 const training = fallback('Pouvez-vous former nos équipes internes à la relation client ?');
 assert.match(training, /modules certifiants/);
 
+// Attestation VivaeSIM publiée sur le site : l'assistant doit la citer
+// exactement, sans la présenter comme une certification ISO.
+const recognition = fallback('Avez-vous reçu une attestation ou un certificat officiel de satisfaction ?');
+assert.match(recognition, /VivaeSIM/);
+assert.match(recognition, /VES-2025-001/);
+assert.match(recognition, /3 juin 2026/);
+assert.match(recognition, /attestation de satisfaction d’un partenaire/);
+assert.match(recognition, /non d’une certification ISO/);
+
+const iso = fallback('Êtes-vous certifiés ISO 9001 ?');
+assert.match(iso, /ne mentionnent pas de certification ISO publiée/);
+assert.doesNotMatch(iso, /VES-2025-001/);
+
 assert.equal(validateAIResponse('Appelez-nous au +227 11 22 33 44.', ctx).ok, false);
 assert.equal(validateAIResponse('Le service coûte 500000 FCFA.', ctx).ok, false);
 assert.equal(validateAIResponse('Notre support est disponible 24/7.', ctx).ok, false);

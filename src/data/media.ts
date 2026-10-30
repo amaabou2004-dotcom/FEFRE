@@ -206,6 +206,18 @@ export const SITE_MEDIA_CATALOG: Record<string, MediaItem> = {
     alt: "Conseillère africaine noire en relation client professionnelle au siège de Niamey",
     category: "contact",
     aspectRatio: "4:3"
+  },
+  "recognition-vivaesim-certificate": {
+    id: "recognition-vivaesim-certificate",
+    name: "Reconnaissance — Certificat officiel VivaeSIM",
+    description: "Official Certificate of Satisfaction and Recognition n° VES-2025-001 délivré le 3 juin 2026 par Viva Nation Limited (Vivape | VivaeSIM) à Excellence Services SARL.",
+    location: "recognition-vivaesim-certificate",
+    url: LOCAL_IMAGES.vivaesimCertificate,
+    mobileUrl: LOCAL_IMAGES.vivaesimCertificateMobile,
+    srcSet: `${LOCAL_IMAGES.vivaesimCertificateMobile} 720w, ${LOCAL_IMAGES.vivaesimCertificate} 1080w`,
+    alt: "Certificat officiel de satisfaction et de reconnaissance VivaeSIM n° VES-2025-001 décerné à Excellence Services SARL le 3 juin 2026",
+    category: "recognition",
+    aspectRatio: "4:3"
   }
 };
 
@@ -239,5 +251,11 @@ export const CURATED_IMAGES = {
     mobileUrl: SITE_MEDIA_CATALOG["contact-multichannel"].mobileUrl,
     srcSet: SITE_MEDIA_CATALOG["contact-multichannel"].srcSet,
     alt: SITE_MEDIA_CATALOG["contact-multichannel"].alt 
+  },
+  vivaesimCertificate: {
+    url: SITE_MEDIA_CATALOG["recognition-vivaesim-certificate"].url,
+    mobileUrl: SITE_MEDIA_CATALOG["recognition-vivaesim-certificate"].mobileUrl,
+    srcSet: SITE_MEDIA_CATALOG["recognition-vivaesim-certificate"].srcSet,
+    alt: SITE_MEDIA_CATALOG["recognition-vivaesim-certificate"].alt
   },
 };
