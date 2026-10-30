@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { RouterProvider, useRouter } from './lib/router';
 import { DataProvider } from './lib/DataContext';
 import { AuthProvider } from './lib/AuthContext';
+import { AIChatProvider } from './lib/AIChatContext';
 import { useTheme, ThemeProvider } from './hooks/useTheme';
 import { LanguageProvider } from './hooks/useLanguage';
 import { Navbar } from './components/Navbar';
@@ -169,7 +170,9 @@ export default function App() {
           <RouterProvider>
             <DataProvider>
               <AuthProvider>
-                <AppContent />
+                <AIChatProvider>
+                  <AppContent />
+                </AIChatProvider>
               </AuthProvider>
             </DataProvider>
           </RouterProvider>

@@ -164,7 +164,7 @@ export const ContactPage: React.FC = () => {
                 <div>
                   <p className="font-bold text-[#01184C] dark:text-white">{t('contact_page.hours_label', "Horaires d'ouverture")}</p>
                   <p className="text-slate-600 dark:text-slate-300">
-                    {isEnglish ? 'Monday to Friday: 8:00 AM - 6:00 PM | Saturday: 9:00 AM - 1:00 PM' : settings.workingHours}
+                    {settings.workingHours}
                   </p>
                 </div>
               </div>

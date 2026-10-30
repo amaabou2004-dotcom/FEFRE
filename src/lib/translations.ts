@@ -96,32 +96,32 @@ export const TRANSLATIONS: TranslationDictionary = {
   'service.01.sum': { fr: 'Gestion externalisée, support multicanal et excellence opérationnelle pour valoriser chaque interaction client.', en: 'Outsourced management, multichannel support, and operational excellence to enhance every customer interaction.' },
 
   'service.02.title': { fr: 'Solutions CRM & Technologies de la Relation Client', en: 'CRM Solutions & Customer Relationship Tech' },
-  'service.02.pos': { fr: 'Intégration, paramétrage & automatisation intelligente.', en: 'Integration, configuration & smart automation.' },
-  'service.02.sum': { fr: 'Déploiement et personnalisation de CRM leaders (HubSpot, Salesforce, Zoho) pour piloter vos parcours clients.', en: 'Deployment and customization of leading CRMs (HubSpot, Salesforce, Zoho) to streamline customer journeys.' },
+  'service.02.pos': { fr: 'Outils, automatisation et digitalisation des interactions.', en: 'Tools, automation and digitalization of interactions.' },
+  'service.02.sum': { fr: 'Centralisation, automatisation et intégration poussée des données clients pour des parcours sans friction.', en: 'Centralization, automation and advanced integration of customer data for frictionless journeys.' },
 
-  'service.03.title': { fr: 'Télémarketing, Prospection & Vente à Distance', en: 'Telemarketing, Lead Generation & Remote Sales' },
-  'service.03.pos': { fr: 'Accélération commerciale & génération de leads qualifiés.', en: 'Commercial acceleration & qualified lead generation.' },
-  'service.03.sum': { fr: 'Campagnes d’appels sortants, prise de rendez-vous B2B/B2C et télévente ciblée pour démultiplier vos ventes.', en: 'Outbound campaigns, B2B/B2C appointment setting, and targeted telesales to scale your revenue.' },
+  'service.03.title': { fr: 'Conseil, Audit & Stratégie Client', en: 'Consulting, Audit & Customer Strategy' },
+  'service.03.pos': { fr: 'Pilotage, structuration et amélioration continue.', en: 'Steering, structuring and continuous improvement.' },
+  'service.03.sum': { fr: "Diagnostics précis, cartographies de parcours et recommandations d'experts pour une fidélisation durable.", en: 'Precise diagnostics, journey mapping and expert recommendations for lasting customer loyalty.' },
 
-  'service.04.title': { fr: 'Audit, Conseil & Stratégie Expérience Client (CX)', en: 'CX Audit, Consulting & Customer Experience Strategy' },
-  'service.04.pos': { fr: 'Diagnostic organisationnel & feuille de route stratégique.', en: 'Organizational diagnosis & strategic roadmap.' },
-  'service.04.sum': { fr: 'Cartographie des parcours, audits qualité et plans d’action pour hisser vos standards de service au niveau international.', en: 'Journey mapping, quality audits, and action plans to elevate your service standards to international excellence.' },
+  'service.04.title': { fr: 'Digital, Web & Applications', en: 'Digital, Web & Applications' },
+  'service.04.pos': { fr: 'Présence digitale et outils métiers.', en: 'Digital presence and business tools.' },
+  'service.04.sum': { fr: 'Conception et ingénierie de plateformes web et mobiles haute performance orientées conversion et expérience utilisateur.', en: 'Design and engineering of high-performance web and mobile platforms focused on conversion and user experience.' },
 
-  'service.05.title': { fr: 'Recouvrement Amiable & Gestion des Impayés', en: 'Amicable Debt Collection & Recovery Management' },
-  'service.05.pos': { fr: 'Préservation de la relation commerciale & sécurisation du cash flow.', en: 'Preserving client relationships & securing cash flow.' },
-  'service.05.sum': { fr: 'Relances préventives, médiation respectueuse et gestion rigoureuse des créances pour accélérer vos encaissements.', en: 'Preventive reminders, respectful mediation, and rigorous receivables management to accelerate collections.' },
+  'service.05.title': { fr: 'Développement Commercial & Représentation', en: 'Business Development & Representation' },
+  'service.05.pos': { fr: 'Croissance, partenariats et expansion marché.', en: 'Growth, partnerships and market expansion.' },
+  'service.05.sum': { fr: 'Accélération commerciale structurée, valorisation de vos offres et conquête active de nouveaux marchés.', en: 'Structured commercial acceleration, stronger offer positioning and active development of new markets.' },
 
-  'service.06.title': { fr: 'Digitalisation, Solutions Web & E-Commerce', en: 'Digitalization, Web Solutions & E-Commerce' },
-  'service.06.pos': { fr: 'Ingénierie digitale, portails métiers & visibilité web.', en: 'Digital engineering, business portals & web visibility.' },
-  'service.06.sum': { fr: 'Création de sites web professionnels, plateformes e-commerce et applications interactives pour digitaliser vos activités.', en: 'Creation of professional websites, e-commerce platforms, and interactive applications to digitalize your operations.' },
+  'service.06.title': { fr: 'Transformation Numérique des Entreprises', en: 'Corporate Digital Transformation' },
+  'service.06.pos': { fr: 'Accompagnement global et changement organisationnel.', en: 'End-to-end support and organizational change.' },
+  'service.06.sum': { fr: "Modernisation des processus métiers et conduite du changement axée sur l'humain et les technologies.", en: 'Modernization of business processes and change management centered on people and technology.' },
 
-  'service.07.title': { fr: 'Formation & Renforcement des Compétences', en: 'Training & Professional Skills Development' },
-  'service.07.pos': { fr: 'Capital humain, savoir-faire relationnel & posture d’excellence.', en: 'Human capital, interpersonal skills & posture of excellence.' },
-  'service.07.sum': { fr: 'Modules pratiques certifiants pour téléconseillers, superviseurs et managers : écoute active, gestion des objections et CRM.', en: 'Practical certifying workshops for advisors, supervisors, and managers: active listening, objection handling, and CRM.' },
+  'service.07.title': { fr: 'Innovation & Expérience Client Avancée', en: 'Innovation & Advanced Customer Experience' },
+  'service.07.pos': { fr: 'Différenciation et excellence durable.', en: 'Differentiation and lasting excellence.' },
+  'service.07.sum': { fr: 'Création de valeur mesurable grâce à des approches avant-gardistes et une satisfaction client décuplée.', en: 'Measurable value creation through forward-looking approaches and stronger customer satisfaction.' },
 
-  'service.08.title': { fr: 'Vente & Équipements Professionnels Spécialisés', en: 'Sales & Specialized Professional Equipment' },
-  'service.08.pos': { fr: 'Matériel télécom certifié, casques haute réduction de bruit & infrastructure.', en: 'Certified telecom hardware, noise-cancelling headsets & infrastructure.' },
-  'service.08.sum': { fr: 'Fourniture de stations de travail, casques anti-bruit professionnels et serveurs télécoms pour centres d’appels.', en: 'Supply of workstations, professional noise-cancelling headsets, and telecom servers for call centers.' },
+  'service.08.title': { fr: 'E-commerce & Plateformes de Vente', en: 'E-commerce & Sales Platforms' },
+  'service.08.pos': { fr: 'Monétisation digitale et performance commerciale.', en: 'Digital monetization and commercial performance.' },
+  'service.08.sum': { fr: 'Boutiques en ligne optimisées, intégrations de passerelles et réduction des abandons de paniers.', en: 'Optimized online stores, gateway integrations and reduced cart abandonment.' },
 
   // About Preview
   'about_prev.badge': { fr: 'À Propos de Nous', en: 'About Us' },
@@ -270,20 +270,20 @@ export const TRANSLATIONS: TranslationDictionary = {
   'ai.whatsapp_direct': { fr: 'WhatsApp direct', en: 'WhatsApp direct' },
   'ai.close': { fr: 'Fermer le chat', en: 'Close chat' },
   'ai.fullscreen': { fr: 'Agrandir en plein écran', en: 'Open in fullscreen' },
-  'ai.toggle_open': { fr: 'Discuter avec le Conseiller Virtuel 24/7', en: 'Chat with Virtual Advisor 24/7' },
+  'ai.toggle_open': { fr: 'Discuter avec le Conseiller Virtuel', en: 'Chat with the Virtual Advisor' },
   'ai.toggle_close': { fr: 'Fermer la fenêtre du chat', en: 'Close chat window' },
   'ai.welcome': {
-    fr: "Bonjour et bienvenue chez Excellence Services SARL.\n\nJe suis votre Conseiller Virtuel. Je suis à votre disposition pour vous orienter sur nos expertises (centres d'appels, CRM, télémarketing, recouvrement amiable ou solutions web) et vous guider vers un chiffrage personnalisé à Niamey.\n\nEn quoi puis-je vous renseigner aujourd'hui ?",
-    en: 'Hello and welcome to Excellence Services SARL.\n\nI am your Virtual Advisor. I am at your service to guide you on our expertise (call centers, CRM, telemarketing, debt recovery, or web solutions) and assist you with a customized quotation in Niamey.\n\nHow can I assist you today?',
+    fr: "Bonjour et bienvenue chez Excellence Services SARL.\n\nJe réponds à partir des informations publiées sur ce site : services, secteurs, réalisations, devis et coordonnées. Si une information n’est pas publiée, je vous l’indiquerai clairement au lieu de l’inventer.\n\nQue souhaitez-vous savoir ?",
+    en: 'Hello and welcome to Excellence Services SARL.\n\nI answer from the information published on this website: services, sectors, projects, quotes and contact details. If information is not published, I will say so clearly instead of inventing it.\n\nWhat would you like to know?',
   },
 
   // AI suggestions
-  'ai.sug1': { fr: 'Centre d’appels 24/7', en: '24/7 Call Center' },
+  'ai.sug1': { fr: 'Centre de contact', en: 'Contact center' },
   'ai.sug1_q': { fr: 'Quelles sont vos solutions de centre de contact et gestion de la relation client ?', en: 'What are your contact center and customer relationship solutions?' },
   'ai.sug2': { fr: 'Demande de devis', en: 'Quote Request' },
-  'ai.sug2_q': { fr: 'Comment obtenir un devis personnalisé pour externaliser nos opérations ?', en: 'How do I obtain a tailored quotation to outsource operations?' },
-  'ai.sug3': { fr: 'Intégration CRM', en: 'CRM Integration' },
-  'ai.sug3_q': { fr: 'Quelles solutions CRM intégrez-vous (HubSpot, Salesforce, Zoho) ?', en: 'Which CRM solutions do you integrate (HubSpot, Salesforce, Zoho)?' },
+  'ai.sug2_q': { fr: 'Comment obtenir un devis personnalisé ?', en: 'How do I obtain a tailored quotation?' },
+  'ai.sug3': { fr: 'Accompagnement CRM', en: 'CRM support' },
+  'ai.sug3_q': { fr: 'Que comprend votre accompagnement CRM ?', en: 'What does your CRM support include?' },
   'ai.sug4': { fr: 'Coordonnées & Siège', en: 'Contact & Office' },
   'ai.sug4_q': { fr: 'Quelles sont vos coordonnées officielles, NIF et RCCM à Niamey ?', en: 'What are your official coordinates, NIF, and RCCM in Niamey?' },
 
@@ -357,7 +357,7 @@ export const TRANSLATIONS: TranslationDictionary = {
   'contact_page.subject': { fr: 'Objet de votre demande', en: 'Subject of your request' },
   'contact_page.subject_placeholder': { fr: 'Ex: Projet de centre d’appels, Intégration CRM...', en: 'E.g., Call center project, CRM integration...' },
   'contact_page.hours_label': { fr: 'Heures d’ouverture', en: 'Opening Hours' },
-  'contact_page.hours_val': { fr: 'Lundi au Vendredi : 08h00 - 18h00 | Samedi : 09h00 - 13h00', en: 'Monday to Friday: 8:00 AM - 6:00 PM | Saturday: 9:00 AM - 1:00 PM' },
+  'contact_page.hours_val': { fr: 'Lundi – Vendredi : 09h30 – 17h30', en: 'Monday – Friday: 9:30 AM – 5:30 PM' },
 
   // Quote Page
   'quote_page.badge': { fr: 'Demande de Chiffrage Express', en: 'Express Quotation Request' },
