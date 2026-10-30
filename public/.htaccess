@@ -31,6 +31,11 @@ AddDefaultCharset UTF-8
   RewriteEngine On
   RewriteBase /
 
+  # Laisser passer les challenges de validation SSL (Let's Encrypt / AutoSSL)
+  # en HTTP, sinon l'émission du premier certificat peut être bloquée par
+  # la redirection HTTPS ci-dessous.
+  RewriteRule ^\.well-known/(acme-challenge|pki-validation)/ - [L]
+
   # Redirection automatique vers HTTPS si actif
   RewriteCond %{HTTPS} off
   RewriteCond %{HTTP:X-Forwarded-Proto} !https

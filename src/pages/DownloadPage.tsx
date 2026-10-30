@@ -10,7 +10,8 @@ import {
   ShieldCheck,
   RefreshCw,
   FolderArchive,
-  ArrowRight
+  ArrowRight,
+  Database
 } from 'lucide-react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
 
@@ -30,7 +31,17 @@ export const DownloadPage: React.FC = () => {
         throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
       }
 
-      const blob = await response.blob();
+      // Sur un hébergement SPA, une archive absente peut être remplacée par
+      // index.html (HTTP 200). On vérifie donc la signature ZIP « PK\x03\x04 »
+      // avant de proposer un fichier qui serait en réalité du HTML.
+      const buffer = await response.arrayBuffer();
+      const header = new Uint8Array(buffer.slice(0, 4));
+      const isZip = header.length === 4 && header[0] === 0x50 && header[1] === 0x4b && header[2] === 0x03 && header[3] === 0x04;
+      if (!isZip) {
+        throw new Error('Archive introuvable sur cet hébergement');
+      }
+
+      const blob = new Blob([buffer], { type: 'application/zip' });
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
@@ -43,8 +54,8 @@ export const DownloadPage: React.FC = () => {
       setDownloadSuccess(key);
     } catch (err: any) {
       console.error('Erreur téléchargement blob:', err);
-      // Fallback: direct window location navigation
-      window.location.href = url;
+      setDownloadSuccess(null);
+      setDownloadError('Archive introuvable sur cet hébergement. Utilisez le ZIP fourni avec le guide LWS, ou téléchargez-le depuis le site principal à jour.');
     } finally {
       setDownloading(null);
     }
@@ -70,7 +81,7 @@ export const DownloadPage: React.FC = () => {
             Téléchargement du site pour <span className="text-[#D4AF37]">cPanel LWS</span>
           </h1>
           <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
-            Téléchargez directement les archives de votre site web pour héberger Excellence Services SARL chez l’hébergeur LWS.
+            Téléchargez les archives de production pour héberger Excellence Services SARL chez LWS. <strong>Supabase est déjà configuré</strong> : aucune base MySQL, aucun import SQL et aucune variable Supabase ne sont à saisir dans cPanel.
           </p>
         </div>
 
@@ -91,6 +102,23 @@ export const DownloadPage: React.FC = () => {
           </div>
         </div>
 
+        <div className="p-5 sm:p-6 rounded-3xl bg-emerald-500/10 border border-emerald-500/30 flex items-start gap-3">
+          <Database className="w-5 h-5 text-emerald-600 dark:text-emerald-400 shrink-0 mt-0.5" />
+          <div>
+            <h2 className="font-bold text-sm sm:text-base text-emerald-900 dark:text-emerald-200">Base Supabase déjà reliée</h2>
+            <p className="text-xs sm:text-sm text-emerald-900/80 dark:text-emerald-100/80 leading-relaxed mt-1">
+              Après extraction sur LWS, le site et l’admin <code className="font-mono">/admin</code> utilisent immédiatement la base Supabase existante. Ne créez pas de base MySQL dans cPanel et n’importez aucun fichier SQL sur LWS.
+            </p>
+          </div>
+        </div>
+
+        {downloadError && (
+          <div className="p-5 rounded-3xl bg-red-500/10 border border-red-500/30 flex items-start gap-3" role="alert">
+            <AlertTriangle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+            <p className="text-xs sm:text-sm font-semibold text-red-800 dark:text-red-200 leading-relaxed">{downloadError}</p>
+          </div>
+        )}
+
         {/* Download Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Card 1: Standard public_html */}
@@ -109,7 +137,7 @@ export const DownloadPage: React.FC = () => {
                   Archive Standard <code className="text-sm font-mono text-[#D4AF37]">public_html</code>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-public_html.zip</span> (~2.3 Mo)
+                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-public_html.zip</span> (~2,2 Mo)
                 </p>
               </div>
 
@@ -124,11 +152,11 @@ export const DownloadPage: React.FC = () => {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Fichier test <code className="font-mono">test-lws.php</code> inclus pour diagnostic immédiat</span>
+                  <span>Supabase déjà configuré : aucun MySQL ni import SQL sur LWS</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
-                  <span>Zéro configuration requise sur votre hébergement LWS</span>
+                  <span>IA locale vérifiée incluse pour l’hébergement statique</span>
                 </li>
               </ul>
             </div>
@@ -187,12 +215,12 @@ export const DownloadPage: React.FC = () => {
                   Archive Node.js <code className="text-sm font-mono text-slate-500">cPanel App</code>
                 </h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-nodejs.zip</span> (~2.4 Mo)
+                  Fichier : <span className="font-mono text-slate-700 dark:text-slate-200">excellence-services-cpanel-nodejs.zip</span> (~2,3 Mo)
                 </p>
               </div>
 
               <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-                À utiliser <strong>uniquement</strong> si vous activez le module cPanel <strong>« Setup Node.js App »</strong> chez LWS pour faire tourner le serveur Express avec l’API de chat Gemini.
+                À utiliser <strong>uniquement</strong> si vous activez le module cPanel <strong>« Setup Node.js App »</strong> chez LWS. Supabase reste déjà configuré côté site ; seule une clé Gemini optionnelle peut être ajoutée au serveur pour enrichir l’IA.
               </p>
 
               <ul className="text-xs text-slate-600 dark:text-slate-300 space-y-1.5 border-t border-slate-200 dark:border-white/10 pt-4">
@@ -278,9 +306,9 @@ export const DownloadPage: React.FC = () => {
               <div className="w-7 h-7 rounded-full bg-[#D4AF37] text-[#01184C] font-black flex items-center justify-center text-xs">
                 3
               </div>
-              <h4 className="font-bold text-[#01184C] dark:text-white text-sm">Vérifier avec test-lws.php</h4>
+              <h4 className="font-bold text-[#01184C] dark:text-white text-sm">Vérifier Supabase et l’admin</h4>
               <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                Ouvrez dans votre navigateur : <code className="font-mono text-[#D4AF37]">votre-domaine.com/test-lws.php</code>. Il affichera un diagnostic vert confirmant que tout est en ordre !
+                Activez le HTTPS, ouvrez votre domaine puis <code className="font-mono text-[#D4AF37]">/admin</code> avec le mot de passe administrateur actuel. Le diagnostic <code className="font-mono">test-lws.php</code> est optionnel : supprimez-le immédiatement après usage.
               </p>
             </div>
           </div>
