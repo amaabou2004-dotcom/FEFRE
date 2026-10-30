@@ -17,7 +17,7 @@ export const Footer: React.FC = () => {
   const whatsappUrl = `https://wa.me/${settings.whatsappRaw}?text=${encodeURIComponent(settings.defaultWhatsAppMessage)}`;
 
   return (
-    <footer className="bg-slate-100 dark:bg-[#01184C] text-[#0E1D38] dark:text-white border-t border-slate-200 dark:border-white/10 pt-16 pb-12 overflow-hidden relative transition-colors duration-300">
+    <footer className="bg-slate-100 dark:bg-[#01184C] text-[#0E1D38] dark:text-white border-t border-slate-200 dark:border-white/10 pt-16 pb-[calc(3rem+var(--mobile-bottom-nav-height))] lg:pb-12 overflow-hidden relative transition-colors duration-300">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#D4AF37]/10 rounded-full blur-3xl -translate-y-1/2" />
         <div className="absolute bottom-0 right-10 w-80 h-80 bg-blue-200/40 dark:bg-[#0A2254]/50 rounded-full blur-3xl" />

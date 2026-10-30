@@ -1,5 +1,5 @@
 import React, { useEffect, Suspense, lazy } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { RouterProvider, useRouter } from './lib/router';
 import { DataProvider } from './lib/DataContext';
 import { AuthProvider } from './lib/AuthContext';
@@ -33,7 +33,7 @@ const AIAssistantPage = lazy(() => import('./pages/AIAssistantPage').then((m) =>
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then((m) => ({ default: m.DownloadPage })));
 
 const RouteLoadingFallback = () => (
-  <div className="min-h-[60vh] flex items-center justify-center py-20" aria-label="Chargement de la page">
+  <div className="min-h-[60dvh] flex items-center justify-center py-20" aria-label="Chargement de la page">
     <div className="w-9 h-9 border-3 border-[#D4AF37]/30 border-t-[#D4AF37] rounded-full animate-spin" />
   </div>
 );
@@ -41,6 +41,7 @@ const RouteLoadingFallback = () => (
 const AppContent: React.FC = () => {
   const { currentPath } = useRouter();
   const { theme, toggleTheme } = useTheme();
+  const shouldReduceMotion = useReducedMotion();
 
   // Scroll to top upon route change smoothly (must run unconditionally before any early return)
   useEffect(() => {
@@ -116,7 +117,14 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F8FAFD] dark:bg-[#030F26] text-[#0E1D38] dark:text-white transition-colors duration-300 font-sans selection:bg-[#D4AF37] selection:text-[#01184C]">
+    <div className="min-h-dvh flex flex-col bg-[#F8FAFD] dark:bg-[#030F26] text-[#0E1D38] dark:text-white transition-colors duration-300 font-sans selection:bg-[#D4AF37] selection:text-[#01184C]">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[100] focus:rounded-xl focus:bg-[#D4AF37] focus:px-4 focus:py-3 focus:text-sm focus:font-bold focus:text-[#01184C] focus:shadow-xl"
+      >
+        Aller au contenu principal
+      </a>
+
       {/* Subtle Custom Cursor for desktop precision */}
       <CustomCursor />
 
@@ -127,14 +135,14 @@ const AppContent: React.FC = () => {
       <Navbar theme={theme} onToggleTheme={toggleTheme} />
 
       {/* Main Page View with Fluid Page Transitions */}
-      <main id="main-content" className="flex-1 w-full max-w-full overflow-x-hidden">
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full max-w-full overflow-x-clip outline-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentPath}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            initial={shouldReduceMotion ? false : { opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.18, ease: 'easeOut' }}
             className="w-full flex-1"
           >
             {renderRoute()}

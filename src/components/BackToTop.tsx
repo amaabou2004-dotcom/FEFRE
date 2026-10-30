@@ -29,7 +29,7 @@ export const BackToTop: React.FC = () => {
           transition={{ duration: 0.2 }}
           aria-label="Retour en haut de page"
           title="Retour en haut"
-          className="fixed bottom-20 sm:bottom-24 right-3 sm:right-6 z-35 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/95 dark:bg-[#0A2254]/95 backdrop-blur-md text-[#01184C] dark:text-[#D4AF37] border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37] shadow-lg flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
+          className="fixed bottom-[calc(var(--mobile-bottom-nav-height)+4.75rem)] lg:bottom-24 right-3 sm:right-6 z-35 w-11 h-11 rounded-full bg-white/95 dark:bg-[#0A2254]/95 backdrop-blur-md text-[#01184C] dark:text-[#D4AF37] border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37] shadow-lg flex items-center justify-center transition-all cursor-pointer hover:scale-105 active:scale-95"
         >
           <ArrowUp className="w-5 h-5" />
         </motion.button>
