@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShieldCheck, MapPin, Mail, Phone, Clock, MessageSquare, Bot } from 'lucide-react';
+import { ShieldCheck, MapPin, Mail, Phone, Clock, MessageSquare, Bot, Code2 } from 'lucide-react';
 import { Link } from '../lib/router';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
@@ -233,6 +233,19 @@ export const Footer: React.FC = () => {
             </Link>
           </div>
         </div>
+
+        {/* Signature du développeur */}
+        <div className="mt-7 flex flex-col items-center justify-center gap-1.5 border-t border-slate-200/80 pt-5 text-center dark:border-white/10">
+          <span className="inline-flex items-center gap-2 text-[10px] font-extrabold uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+            <Code2 className="h-3.5 w-3.5 text-[#B38F22] dark:text-[#D4AF37]" aria-hidden="true" />
+            {t('footer.developer_label', 'Conception & développement')}
+          </span>
+          <p className="font-display text-sm font-extrabold tracking-wide text-[#01184C] dark:text-white sm:text-base">
+            Amadou Aboubakar
+            <span className="mx-2 text-[#D4AF37]" aria-hidden="true">—</span>
+            <span className="text-[#8A6D14] dark:text-[#D4AF37]">{t('footer.developer_role', 'Développeur')}</span>
+          </p>
+        </div>
       </div>
 
       {/* Modal Mentions & Confidentialité */}
@@ -272,6 +285,8 @@ export const Footer: React.FC = () => {
                     Email : {settings.email}
                     <br />
                     Téléphones : +227 90 39 31 32 / +227 88 08 00 00 / WhatsApp : {settings.whatsapp}
+                    <br />
+                    {t('footer.developer_label', 'Conception & développement')} : <strong>Amadou Aboubakar</strong> — {t('footer.developer_role', 'Développeur')}
                   </p>
                 </div>
                 <div>
