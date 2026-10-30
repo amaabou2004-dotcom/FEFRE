@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import {
   buildKnowledgeFallbackReply,
+  buildLocalAIReply,
   DEFAULT_AI_CONTEXT,
   validateAIResponse,
 } from '../src/lib/aiAssistant.ts';
@@ -73,6 +74,17 @@ assert.match(currentPrice, /Digital, Web & Applications/);
 const currentDelay = buildKnowledgeFallbackReply('Quel est le délai de mise en place de ce service ?', currentContext, 'fr', [], 'floating').reply;
 assert.match(currentDelay, /ne mentionnent pas de délai/);
 assert.doesNotMatch(currentDelay, /5 et 15 jours/);
+
+// Mode local utilisé sur hébergement statique LWS lorsqu'il n'y a pas d'API Node.
+const localContacts = buildLocalAIReply('Quelles sont vos coordonnées officielles ?', ctx, 'fr', [], 'floating');
+assert.equal(localContacts.source, 'knowledge');
+assert.equal(localContacts.language, 'fr');
+assert.match(localContacts.reply, /\+227 78 79 89 00/);
+
+const localUnknown = buildLocalAIReply('Question totalement hors périmètre publié zzqx ?', ctx, 'fr', [], 'page');
+assert.equal(localUnknown.source, 'fallback');
+assert.match(localUnknown.reply, /ne trouve pas de réponse suffisamment fiable/);
+assert.doesNotMatch(localUnknown.reply, /FCFA|€|\$\s?\d/);
 
 console.log('AI knowledge tests passed');
 console.log('\n--- Services floating sample ---\n', fallback('Quels sont vos services ?', 'fr', [], 'floating'));

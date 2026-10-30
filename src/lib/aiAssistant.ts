@@ -1707,6 +1707,37 @@ export function buildKnowledgeFallbackReply(
   );
 }
 
+export interface LocalAIReply extends AIKnowledgeReply {
+  source: 'knowledge' | 'fallback';
+  language: AILanguage;
+}
+
+/**
+ * Réponse locale 100 % navigateur, utilisée lorsque l'API serveur n'existe
+ * pas (hébergement statique Apache/LWS) ou est momentanément injoignable.
+ * Elle réutilise exactement les mêmes réponses vérifiées que le serveur,
+ * sans clé Gemini et à partir du contexte Supabase déjà chargé par le site.
+ */
+export function buildLocalAIReply(
+  rawMessage: string,
+  context: AISiteContext,
+  preferredLanguage?: AILanguage,
+  history: AIHistoryItem[] = [],
+  surface: AISurface = 'page',
+): LocalAIReply {
+  const language = detectAILanguage(rawMessage, preferredLanguage);
+  const directReply = buildDeterministicAIReply(rawMessage, context, language, history, surface);
+  if (directReply) {
+    return { ...directReply, source: 'knowledge', language };
+  }
+
+  return {
+    ...buildKnowledgeFallbackReply(rawMessage, context, language, history, surface),
+    source: 'fallback',
+    language,
+  };
+}
+
 export function buildAISystemInstruction(
   context: AISiteContext,
   language: AILanguage,

@@ -2,7 +2,6 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs';
 import compression from 'compression';
-import { createServer as createViteServer } from 'vite';
 import { handleImageTransform, handleImageTransformPost } from './server/imageService';
 import { handleAIChatRequest } from './server/aiChat';
 
@@ -75,6 +74,9 @@ app.post('/api/ai/chat', async (req, res) => {
 // Start server with Vite middleware in dev or static files in production
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
+    // Chargement dynamique : le package Node.js de production (cPanel LWS)
+    // n'a ainsi pas besoin d'installer Vite, qui ne sert qu'en développement.
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',

@@ -4,6 +4,7 @@ import { useLanguage } from '../hooks/useLanguage';
 import { useRouter } from './router';
 import {
   buildAISiteContext,
+  buildLocalAIReply,
   getAISuggestions,
   type AIIntent,
   type AILanguage,
@@ -192,6 +193,26 @@ export const AIChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         .slice(-10)
         .map((message) => ({ sender: message.sender, text: message.text }));
 
+      // Sur un hébergement statique (Apache/LWS), `/api/ai/chat` peut être
+      // absent ou renvoyer index.html. Dans ce cas, on répond localement à
+      // partir du même contexte Supabase vérifié, au lieu d'afficher une erreur.
+      const appendLocalReply = () => {
+        const localReply = buildLocalAIReply(text, siteContext, language, history, surface);
+        updateMessages((current) => [
+          ...current,
+          {
+            id: createId('bot'),
+            sender: 'bot',
+            text: localReply.reply,
+            timestamp: formatTime(localReply.language),
+            intent: localReply.intent,
+            status: 'complete',
+            source: localReply.source,
+          },
+        ]);
+        setSuggestions(localReply.suggestions.slice(0, 3));
+      };
+
       try {
         const response = await fetch('/api/ai/chat', {
           method: 'POST',
@@ -239,6 +260,18 @@ export const AIChatProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       } catch (error: any) {
         const abortReason = abortReasonRef.current as 'timeout' | 'stop' | 'reset' | '';
         if (requestId !== requestIdRef.current || abortReason === 'reset') return;
+
+        // API absente (LWS statique), réponse HTML/illisible ou service
+        // injoignable : basculer sur la connaissance locale vérifiée.
+        // Les arrêts volontaires et les délais dépassés gardent leur message dédié.
+        if (abortReason !== 'stop' && abortReason !== 'timeout') {
+          try {
+            appendLocalReply();
+            return;
+          } catch {
+            // Si même le moteur local échoue, afficher l'erreur explicite ci-dessous.
+          }
+        }
 
         const phone = settings.phones[0]?.number || settings.whatsapp;
         let errorText: string;
