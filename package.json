@@ -9,6 +9,7 @@
     "build:cpanel": "npm run build && python3 scripts/prepare-cpanel-packages.py",
     "start": "node dist/server.cjs",
     "lint": "tsc --noEmit",
+    "test:ai": "tsx scripts/test-ai-assistant.mts",
     "preview": "vite preview"
   },
   "dependencies": {

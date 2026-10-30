@@ -18,6 +18,9 @@ Ce projet est 100% prêt à être déployé sur **Netlify**.
    (`src/lib/supabase.ts`), donc l'espace `/admin` se connecte automatiquement.
    Ajoutez seulement, si vous utilisez l'assistant IA :
    - `GEMINI_API_KEY` : votre clé d'API Google Gemini (fournie par Google AI Studio).
+   - `GEMINI_MODEL` (optionnel) : modèle Gemini à privilégier, par exemple `gemini-3.8-flash`.
+
+   Sans clé Gemini — ou si le service est momentanément indisponible — le Conseiller Virtuel continue de répondre aux questions essentielles (services, secteurs, devis, coordonnées, FAQ) à partir des contenus publiés du site, sans inventer de tarifs ni d’informations absentes.
 
    > Les variables `VITE_SUPABASE_*` restent possibles comme surcharge pour un
    > autre projet Supabase, mais elles sont **optionnelles**. Voir
