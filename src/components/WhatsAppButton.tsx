@@ -11,7 +11,7 @@ export const WhatsAppButton: React.FC = () => {
   return (
     <aside
       aria-label="Assistance WhatsApp"
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] sm:bottom-6 right-3 sm:right-6 z-40 flex flex-col items-end max-w-[calc(100vw-1.5rem)] pointer-events-auto"
+      className="fixed bottom-[calc(var(--mobile-bottom-nav-height)+0.75rem)] lg:bottom-6 right-3 sm:right-6 z-30 flex flex-col items-end max-w-[calc(100vw-1.5rem)] pointer-events-auto"
     >
       <AnimatePresence>
         {showTooltip && (

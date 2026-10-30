@@ -7,6 +7,8 @@ interface LogoProps {
   showText?: boolean;
   size?: 'sm' | 'md' | 'lg';
   onDoubleClick?: (e?: React.MouseEvent | React.TouchEvent) => void;
+  /** Désactiver quand un parent gère déjà clic/double-tap (évite les doublons tactiles). */
+  interactive?: boolean;
 }
 
 export const Logo: React.FC<LogoProps> = ({
@@ -15,6 +17,7 @@ export const Logo: React.FC<LogoProps> = ({
   showText = true,
   size = 'md',
   onDoubleClick,
+  interactive = true,
 }) => {
   const { navigate } = useRouter();
   const [imageError, setImageError] = useState(false);
@@ -54,16 +57,24 @@ export const Logo: React.FC<LogoProps> = ({
 
   const sizeClasses = {
     sm: { container: 'w-9 h-9', title: 'text-sm', sub: 'text-[8px]' },
-    md: { container: 'w-11 h-11 sm:w-12 sm:h-12', title: 'text-base sm:text-lg', sub: 'text-[9px]' },
+    md: {
+      container: 'w-10 h-10 min-[400px]:w-11 min-[400px]:h-11 sm:w-12 sm:h-12',
+      title: 'text-[15px] min-[400px]:text-base sm:text-lg',
+      sub: 'text-[8px] min-[400px]:text-[9px]',
+    },
     lg: { container: 'w-16 h-16 sm:w-20 sm:h-20', title: 'text-xl sm:text-2xl', sub: 'text-[11px]' },
   }[size];
 
   return (
     <div
-      onDoubleClick={handleDoubleClick}
-      onTouchEnd={handleTouchEnd}
-      title="Double-cliquez (ou double-tapez sur mobile) pour accéder à l'espace administrateur"
-      className={`flex items-center gap-3 select-none cursor-pointer group ${className}`}
+      onDoubleClick={interactive ? handleDoubleClick : undefined}
+      onTouchEnd={interactive ? handleTouchEnd : undefined}
+      title={
+        interactive
+          ? "Double-cliquez (ou double-tapez sur mobile) pour accéder à l'espace administrateur"
+          : undefined
+      }
+      className={`flex min-w-0 items-center gap-2.5 min-[400px]:gap-3 select-none group ${interactive ? 'cursor-pointer' : ''} ${className}`}
     >
       <div
         className={`relative ${sizeClasses.container} rounded-full bg-white shadow-md flex items-center justify-center border-2 border-[#D4AF37]/40 group-hover:border-[#D4AF37] group-hover:shadow-[0_0_15px_rgba(212,175,55,0.4)] transition-all overflow-hidden flex-shrink-0 p-0.5`}
@@ -90,8 +101,8 @@ export const Logo: React.FC<LogoProps> = ({
       </div>
 
       {showText && (
-        <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
+        <div className="flex min-w-0 flex-col">
+          <div className="flex items-center gap-1.5 whitespace-nowrap">
             <span
               className={`font-black tracking-tight ${sizeClasses.title} text-[#01184C] dark:text-white leading-tight`}
             >

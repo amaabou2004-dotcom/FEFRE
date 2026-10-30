@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, ChevronDown, Sparkles, ArrowRight, Bot } from 'lucide-react';
 import { Link, useRouter } from '../lib/router';
@@ -7,6 +7,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { LanguageToggle } from './LanguageToggle';
 import { useLanguage } from '../hooks/useLanguage';
 import { MobileMenu } from './MobileMenu';
+import { MobileBottomNav } from './MobileBottomNav';
 import { useScrollPosition } from '../hooks/useScrollPosition';
 import { useSiteData } from '../lib/DataContext';
 
@@ -15,15 +16,6 @@ interface NavbarProps {
   onToggleTheme: () => void;
 }
 
-const NAV_LINKS = [
-  { label: 'Accueil', href: '/' },
-  { label: 'À propos', href: '/a-propos' },
-  { label: 'Services', href: '/services', hasDropdown: true },
-  { label: 'Réalisations', href: '/realisations' },
-  { label: 'Partenaires', href: '/#partenaires' },
-  { label: 'Contact', href: '/contact' },
-];
-
 export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
   const { currentPath, navigate } = useRouter();
   const { isScrolled } = useScrollPosition(25);
@@ -31,6 +23,8 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
   const { t, isEnglish } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const openMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
+  const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
   const activeServices = services.filter((s) => s.status !== 'hidden');
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -51,6 +45,12 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
       if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
     };
   }, []);
+
+  /* Toute navigation (lien, retour navigateur…) referme les menus ouverts. */
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setServicesDropdownOpen(false);
+  }, [currentPath]);
 
   const triggerAdminNavigation = (e?: React.MouseEvent | React.TouchEvent) => {
     if (e) {
@@ -99,13 +99,13 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 max-w-full overflow-x-hidden transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-50 h-[calc(var(--site-header-height)+env(safe-area-inset-top,0px))] pt-[env(safe-area-inset-top)] max-w-full transition-[background-color,border-color,box-shadow] duration-300 ${
           isScrolled
-            ? 'py-2.5 bg-white/95 dark:bg-[#01184C]/98 backdrop-blur-xl border-b border-slate-200 dark:border-[#D4AF37]/35 shadow-md shadow-slate-200/50 dark:shadow-black/25'
-            : 'py-3.5 sm:py-4 bg-white/90 sm:bg-white/80 dark:bg-[#01184C] dark:sm:bg-[#01184C]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10'
+            ? 'bg-white/95 dark:bg-[#01184C]/98 backdrop-blur-xl border-b border-slate-200 dark:border-[#D4AF37]/35 shadow-md shadow-slate-200/50 dark:shadow-black/25'
+            : 'bg-white/90 sm:bg-white/80 dark:bg-[#01184C] dark:sm:bg-[#01184C]/95 backdrop-blur-md border-b border-slate-200/80 dark:border-white/10'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+        <div className="mx-auto flex h-full min-w-0 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
           {/* Logo & Brand */}
           <motion.div
             id="navbar-brand-logo"
@@ -114,15 +114,19 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
             onTouchEnd={handleLogoTouchEnd}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="group flex items-center cursor-pointer select-none"
+            className="group flex min-w-0 shrink items-center cursor-pointer select-none"
             title="Double-cliquez (ou double-tapez sur mobile) pour accéder à l'espace administrateur"
             role="button"
             tabIndex={0}
+            aria-label={isEnglish ? 'Back to home page' : "Retour à l'accueil"}
             onKeyDown={(e) => {
-              if (e.key === 'Enter') navigate('/');
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                navigate('/');
+              }
             }}
           >
-            <Logo onDoubleClick={handleLogoDoubleClick} />
+            <Logo interactive={false} />
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -145,6 +149,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
                   >
                     <Link
                       href={link.href}
+                      ariaCurrent={isActive ? 'page' : undefined}
                       className={`relative flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-colors ${
                         isActive
                           ? 'text-[#01184C] dark:text-[#D4AF37] font-bold'
@@ -225,6 +230,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
                 <Link
                   key={link.href}
                   href={link.href}
+                  ariaCurrent={isActive ? 'page' : undefined}
                   className={`relative px-3.5 py-2 rounded-full transition-colors ${
                     isActive
                       ? 'text-[#01184C] dark:text-[#D4AF37] font-bold'
@@ -286,19 +292,28 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
           </div>
 
           {/* Mobile buttons - Clean, spacious, not crammed */}
-          <div className="flex items-center gap-2.5 lg:hidden">
-            {/* Standalone Mobile Language Button: Spacious, distinct, never squeezed */}
-            <LanguageToggle id="navbar-language-toggle-mobile" variant="pill" />
+          <div className="flex shrink-0 items-center gap-2.5 lg:hidden">
+            {/*
+              Sur très petit écran, la langue reste accessible dans le panneau
+              Menu : l'en-tête garde ainsi une mise en page stable, sans écrasement.
+            */}
+            <div className="hidden min-[430px]:block">
+              <LanguageToggle id="navbar-language-toggle-mobile" variant="pill" />
+            </div>
 
-            {/* Mobile Menu Trigger */}
+            {/* Mobile Menu Trigger — cible tactile de 44 × 44 px minimum */}
             <motion.button
               id="open-mobile-menu"
-              onClick={() => setMobileMenuOpen(true)}
-              whileTap={{ scale: 0.92 }}
-              className="p-2 rounded-xl bg-white dark:bg-[#0A2254] text-[#01184C] dark:text-white border border-[#DDE4EE] dark:border-[#D4AF37]/30 shadow-sm hover:border-[#D4AF37] transition-colors cursor-pointer"
-              aria-label="Ouvrir le menu de navigation"
+              type="button"
+              onClick={openMobileMenu}
+              whileTap={{ scale: 0.95 }}
+              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-xl border border-[#DDE4EE] dark:border-[#D4AF37]/30 bg-white dark:bg-[#0A2254] text-[#01184C] dark:text-white shadow-sm transition-colors hover:border-[#D4AF37]"
+              aria-label={isEnglish ? 'Open the navigation menu' : 'Ouvrir le menu de navigation'}
+              aria-haspopup="dialog"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
-              <Menu className="w-5 h-5 text-[#01184C] dark:text-[#D4AF37]" />
+              <Menu className="w-5 h-5 text-[#01184C] dark:text-[#D4AF37]" aria-hidden="true" />
             </motion.button>
           </div>
         </div>
@@ -306,10 +321,12 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
 
       <MobileMenu
         isOpen={mobileMenuOpen}
-        onClose={() => setMobileMenuOpen(false)}
+        onClose={closeMobileMenu}
         theme={theme}
         onToggleTheme={onToggleTheme}
       />
+
+      <MobileBottomNav onOpenMenu={openMobileMenu} isMenuOpen={mobileMenuOpen} />
     </>
   );
 };

@@ -169,7 +169,7 @@ export const AIAssistantFloatingButton: React.FC = () => {
   };
 
   return (
-    <aside aria-label="Assistant Virtuel IA Flottant" className="fixed bottom-5 left-4 sm:left-6 z-40">
+    <aside aria-label="Assistant Virtuel IA Flottant" className="fixed bottom-[calc(var(--mobile-bottom-nav-height)+0.75rem)] lg:bottom-5 left-4 sm:left-6 z-30">
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -177,7 +177,7 @@ export const AIAssistantFloatingButton: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 15 }}
             transition={{ duration: 0.2, ease: 'easeOut' }}
-            className="mb-3 w-[calc(100vw-32px)] sm:w-[380px] h-[520px] max-h-[78vh] bg-white dark:bg-[#041029] border border-slate-200 dark:border-[#183B7A] rounded-2xl shadow-2xl dark:shadow-[0_20px_60px_rgba(1,10,32,0.65)] flex flex-col overflow-hidden text-[#0E1D38] dark:text-white font-sans transition-colors duration-200"
+            className="mb-3 w-[calc(100vw-32px)] sm:w-[380px] h-[520px] max-h-[calc(100dvh-var(--site-header-height)-var(--mobile-bottom-nav-height)-2rem)] lg:max-h-[78dvh] bg-white dark:bg-[#041029] border border-slate-200 dark:border-[#183B7A] rounded-2xl shadow-2xl dark:shadow-[0_20px_60px_rgba(1,10,32,0.65)] flex flex-col overflow-hidden text-[#0E1D38] dark:text-white font-sans transition-colors duration-200"
           >
             {/* Header */}
             <div className="px-4 py-3 bg-slate-50 dark:bg-[#06183E] border-b border-slate-200 dark:border-[#132C5E] flex items-center justify-between shrink-0">
