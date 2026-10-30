@@ -6,6 +6,7 @@ import { useSiteData } from '../lib/DataContext';
 import { useLanguage } from '../hooks/useLanguage';
 import { WhyChooseUs } from '../components/WhyChooseUs';
 import { ApproachTimeline } from '../components/ApproachTimeline';
+import { RecognitionCertificateSection } from '../components/RecognitionCertificateSection';
 import { OfficialLocationMap } from '../components/OfficialLocationMap';
 import { LOCAL_IMAGES } from '../data/images';
 import { Breadcrumbs } from '../components/Breadcrumbs';
@@ -122,6 +123,9 @@ export const AboutPage: React.FC = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Attestation officielle de satisfaction remise par VivaeSIM */}
+        <RecognitionCertificateSection embedded />
 
         {/* Why Choose Us & Methodology & Map */}
         <WhyChooseUs />

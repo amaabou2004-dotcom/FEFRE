@@ -8,6 +8,7 @@ import { SectorExplorer } from '../components/SectorExplorer';
 import { WhyChooseUs } from '../components/WhyChooseUs';
 import { RealisationsSection } from '../components/RealisationsSection';
 import { PartnersSection } from '../components/PartnersSection';
+import { RecognitionCertificateSection } from '../components/RecognitionCertificateSection';
 import { TestimonialsSection } from '../components/TestimonialsSection';
 import { DigitalNewsSection } from '../components/DigitalNewsSection';
 import { QuickContactSection } from '../components/QuickContactSection';
@@ -41,6 +42,9 @@ export const HomePage: React.FC = () => {
 
       {/* 7. Nos Partenaires (Horizontal Carousel) */}
       <PartnersSection />
+
+      {/* 7.5. Attestation officielle de satisfaction VivaeSIM */}
+      <RecognitionCertificateSection />
 
       {/* 8. Témoignages / Avis (Horizontal Carousel) */}
       <TestimonialsSection />
