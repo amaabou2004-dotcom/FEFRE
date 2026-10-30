@@ -4,7 +4,6 @@ import {
   Award,
   CalendarDays,
   Download,
-  ExternalLink,
   FileBadge2,
   PenLine,
   ShieldCheck,
@@ -17,7 +16,6 @@ import { SITE_MEDIA_CATALOG } from '../data/media';
 
 const CERTIFICATE_MEDIA_ID = 'recognition-vivaesim-certificate';
 const CERTIFICATE_DOWNLOAD_URL = '/certificates/vivaesim-official-certificate-ves-2025-001.jpg';
-const CERTIFICATE_VERIFY_URL = 'https://www.vivaesim.com/verify';
 
 interface RecognitionCertificateSectionProps {
   /** Évite les marges externes lorsque la section est intégrée à une page déjà cadrée. */
@@ -180,16 +178,6 @@ export const RecognitionCertificateSection: React.FC<RecognitionCertificateSecti
                 >
                   <Download className="w-4 h-4" />
                   <span>{t('recognition.download', 'Télécharger')}</span>
-                </a>
-
-                <a
-                  href={CERTIFICATE_VERIFY_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-3 text-xs font-bold text-slate-600 dark:text-slate-300 transition-colors hover:text-[#8A6D14] dark:hover:text-[#D4AF37] hover:underline"
-                >
-                  <span>{t('recognition.verify', 'Vérifier sur VivaeSIM')}</span>
-                  <ExternalLink className="w-3.5 h-3.5" />
                 </a>
               </div>
             </div>

@@ -242,7 +242,6 @@ export const TRANSLATIONS: TranslationDictionary = {
   'recognition.signatory_label': { fr: 'Signataire', en: 'Signed by' },
   'recognition.view': { fr: 'Voir l’attestation', en: 'View the certificate' },
   'recognition.download': { fr: 'Télécharger', en: 'Download' },
-  'recognition.verify': { fr: 'Vérifier sur VivaeSIM', en: 'Verify on VivaeSIM' },
   'recognition.zoom_hint': { fr: 'Cliquer pour agrandir', en: 'Click to enlarge' },
   'recognition.caption': {
     fr: 'Attestation officielle publiée telle que reçue de Viva Nation Limited (Vivape | VivaeSIM).',
