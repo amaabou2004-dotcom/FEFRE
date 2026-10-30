@@ -10,7 +10,7 @@ export const ServicesPage: React.FC = () => {
   const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
 
-  const activeServices = services.filter((s) => s.status !== 'hidden');
+  const activeServices = services.filter((s) => !s.status || s.status === 'active');
   const filteredServices = activeServices.filter(
     (s) =>
       s.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

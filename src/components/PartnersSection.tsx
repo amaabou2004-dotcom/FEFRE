@@ -13,6 +13,10 @@ export const PartnersSection: React.FC = () => {
 
   const activePartners = partners.filter((p) => p.status === 'active');
 
+  // Si l'admin a supprimé/masqué tous les partenaires, la section entière
+  // disparaît immédiatement au lieu de laisser un titre et un carrousel vide.
+  if (activePartners.length === 0) return null;
+
   return (
     <section
       id="partenaires"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Newspaper,
   Bell,
@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Breadcrumbs } from '../components/Breadcrumbs';
-import { BLOG_ARTICLES } from '../data/articles';
 import { useSiteData } from '../lib/DataContext';
 import { ArticleItem } from '../types';
 import { useRouter } from '../lib/router';
@@ -30,9 +29,21 @@ export const NewsPage: React.FC = () => {
 
   const categories = ['Tous', 'Relation Client & BPO', 'Solutions CRM & Automatisation', 'Transformation Digitale & IA'];
 
-  // Articles gérés dans Supabase (repli sur les articles intégrés au code)
+  // Articles gérés dans Supabase. Le contexte contient déjà les articles
+  // intégrés avant la première synchronisation, puis l'état exact de la base.
   const { articles } = useSiteData();
-  const allArticles = (articles.length ? articles : BLOG_ARTICLES).filter((a) => a.status !== 'draft');
+  const allArticles = articles.filter((a) => a.status !== 'draft');
+
+  // Le lecteur ouvert suit les modifications temps réel et se ferme si
+  // l'article est supprimé ou repassé en brouillon dans l'espace admin.
+  useEffect(() => {
+    setSelectedArticle((prev) => {
+      if (!prev) return prev;
+      const current = articles.find((a) => a.id === prev.id && a.status !== 'draft');
+      if (!current) return null;
+      return JSON.stringify(current) === JSON.stringify(prev) ? prev : current;
+    });
+  }, [articles]);
 
   const filteredArticles = allArticles.filter((art) => {
     const matchesCategory = selectedCategory === 'Tous' || art.category === selectedCategory;

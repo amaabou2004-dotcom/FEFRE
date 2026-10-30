@@ -13,7 +13,7 @@ export const Footer: React.FC = () => {
   const { t, isEnglish } = useLanguage();
   const [legalModal, setLegalModal] = useState<'mentions' | 'privacy' | null>(null);
 
-  const activeServices = services.filter((s) => s.status !== 'hidden');
+  const activeServices = services.filter((s) => !s.status || s.status === 'active');
   const whatsappUrl = `https://wa.me/${settings.whatsappRaw}?text=${encodeURIComponent(settings.defaultWhatsAppMessage)}`;
 
   return (

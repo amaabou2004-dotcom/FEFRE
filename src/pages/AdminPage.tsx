@@ -259,6 +259,10 @@ export const AdminPage: React.FC = () => {
     pages,
     isConnectedToCloud,
     isSupabaseConfigured,
+    realtimeStatus,
+    lastSyncedAt,
+    isSyncing,
+    error: dataSyncError,
     refreshData,
     saveService,
     deleteService,
@@ -282,7 +286,6 @@ export const AdminPage: React.FC = () => {
     deleteMedia,
     saveFaq,
     deleteFaq,
-    seedDatabaseIfNeeded,
     resetToDefaults,
   } = useSiteData();
 
@@ -357,6 +360,25 @@ export const AdminPage: React.FC = () => {
       window.alert(`Réinitialisation impossible : ${err?.message || 'erreur inconnue'}`);
     }
   };
+
+  const isRealtimeReady = realtimeStatus === 'subscribed' && isConnectedToCloud;
+  const isRealtimePending =
+    realtimeStatus === 'connecting' || realtimeStatus === 'reconnecting' || isSyncing;
+  const realtimeTitle = isRealtimeReady
+    ? 'Temps réel actif'
+    : isRealtimePending
+      ? 'Synchronisation en cours…'
+      : 'Temps réel à reconnecter';
+  const realtimeDescription = isRealtimeReady
+    ? 'Chaque ajout, modification, changement de statut ou suppression enregistré ici apparaît immédiatement sur les pages publiques déjà ouvertes, sans rechargement.'
+    : 'La connexion se rétablit automatiquement et les données sont resynchronisées. Vous pouvez aussi lancer une synchronisation manuelle.';
+  const lastSyncedLabel = lastSyncedAt
+    ? new Date(lastSyncedAt).toLocaleTimeString('fr-FR', {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+      })
+    : 'en attente';
 
   // If not admin, show streamlined login
   if (!isAdmin) {
@@ -644,6 +666,53 @@ export const AdminPage: React.FC = () => {
 
         {/* Tab views */}
         <main className="flex-1 p-4 sm:p-8 max-w-7xl w-full mx-auto space-y-6">
+          <section
+            role="status"
+            aria-live="polite"
+            className={`p-4 sm:p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center gap-4 ${
+              isRealtimeReady
+                ? 'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-300 dark:border-emerald-500/40 text-emerald-950 dark:text-emerald-100'
+                : isRealtimePending
+                  ? 'bg-amber-50 dark:bg-amber-950/25 border-amber-300 dark:border-amber-500/40 text-amber-950 dark:text-amber-100'
+                  : 'bg-red-50 dark:bg-red-950/30 border-red-300 dark:border-red-500/40 text-red-950 dark:text-red-100'
+            }`}
+          >
+            <div className="flex items-start gap-3 flex-1 min-w-0">
+              {isRealtimeReady ? (
+                <span className="relative mt-0.5 flex h-3 w-3 shrink-0">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-emerald-500" />
+                </span>
+              ) : isRealtimePending ? (
+                <RefreshCw className="w-5 h-5 shrink-0 animate-spin" />
+              ) : (
+                <AlertCircle className="w-5 h-5 shrink-0" />
+              )}
+              <div>
+                <h3 className="text-sm font-extrabold">{realtimeTitle}</h3>
+                <p className="text-xs leading-relaxed opacity-80 mt-0.5">{realtimeDescription}</p>
+                {dataSyncError && !isRealtimeReady && (
+                  <p className="text-[11px] leading-relaxed mt-1 font-semibold">{dataSyncError}</p>
+                )}
+              </div>
+            </div>
+            <div className="flex sm:flex-col items-center sm:items-end justify-between gap-2 shrink-0">
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold opacity-75">
+                <Clock className="w-3.5 h-3.5" />
+                Dernière synchronisation : {lastSyncedLabel}
+              </span>
+              <button
+                type="button"
+                onClick={() => void refreshData()}
+                disabled={isSyncing}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/70 dark:bg-white/10 border border-black/10 dark:border-white/20 text-[11px] font-bold disabled:opacity-50 cursor-pointer"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                Synchroniser
+              </button>
+            </div>
+          </section>
+
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
               {/* Stats Cards */}
@@ -982,7 +1051,7 @@ export const AdminPage: React.FC = () => {
           {activeTab === 'media' && (
             <EntityManager
               title="Médiathèque"
-              description="Table Supabase « media » + bucket Storage « site-media ». Remplacer l’URL d’un emplacement (ex : hero-main) change l’image sur le site."
+              description="Table Supabase « media » + bucket Storage « site-media ». Remplacer l’URL d’un emplacement (ex : hero-main) change l’image sur le site en temps réel. Supprimer une surcharge Supabase restaure l’image intégrée d’origine."
               items={media}
               onSave={saveMedia}
               onDelete={deleteMedia}
@@ -1146,7 +1215,7 @@ export const AdminPage: React.FC = () => {
                     <li>Supabase → SQL Editor : exécuter le script <code className="font-mono text-[#D4AF37]">supabase/migrations/20261029120000_initial_schema.sql</code> (et y indiquer votre email admin).</li>
                     <li>Supabase → Authentication → Users : créer le compte administrateur technique avec votre mot de passe (celui saisi ici, sans email à taper), puis désactiver les inscriptions publiques.</li>
                     <li>La configuration publique Supabase est intégrée au code : aucun réglage d’hébergeur n’est requis, déployez simplement la dernière version du site.</li>
-                    <li>Connectez-vous ici : les contenus par défaut sont importés automatiquement dans Supabase. Détail complet dans le fichier SUPABASE_SETUP.md du projet.</li>
+                    <li>Connectez-vous ici : les contenus par défaut ne sont importés automatiquement que si la base Supabase est entièrement neuve. Une collection vidée volontairement dans l’admin ne sera jamais réimportée toute seule. Détail complet dans le fichier SUPABASE_SETUP.md du projet.</li>
                   </ol>
                   <p className="text-amber-300">Sécurité : l’ancien mot de passe partagé a été supprimé. Seuls les comptes présents dans la table admin_users peuvent modifier le site ; les visiteurs ne voient jamais les devis et messages reçus.</p>
                 </div>

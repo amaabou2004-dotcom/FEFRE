@@ -50,7 +50,9 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
     settings.defaultWhatsAppMessage || '',
   )}`;
-  const activeServices = services.filter((service) => service.status !== 'hidden');
+  const activeServices = services.filter(
+    (service) => !service.status || service.status === 'active'
+  );
 
   const navItems = [
     { label: t('nav.home', 'Accueil'), href: '/' },

@@ -8,8 +8,8 @@ export const KeyStatsSection: React.FC = () => {
   const { services, sectors, settings } = useSiteData();
   const { t, isEnglish } = useLanguage();
 
-  const servicesCount = services.filter((s) => s.status !== 'hidden').length || 8;
-  const sectorsCount = sectors.filter((s) => s.status !== 'hidden').length || 5;
+  const servicesCount = services.filter((s) => !s.status || s.status === 'active').length;
+  const sectorsCount = sectors.filter((s) => !s.status || s.status === 'active').length;
 
   const stats = [
     {

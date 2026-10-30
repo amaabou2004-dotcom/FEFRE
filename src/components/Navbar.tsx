@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
   const openMobileMenu = useCallback(() => setMobileMenuOpen(true), []);
   const closeMobileMenu = useCallback(() => setMobileMenuOpen(false), []);
 
-  const activeServices = services.filter((s) => s.status !== 'hidden');
+  const activeServices = services.filter((s) => !s.status || s.status === 'active');
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const lastTouchTapRef = useRef<number>(0);
 
