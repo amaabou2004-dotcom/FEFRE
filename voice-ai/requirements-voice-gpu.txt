@@ -1,0 +1,17 @@
+# ── ISA : voix avec GPU NVIDIA (optionnel, 3-5× plus rapide) ─────────────────
+# Installez torch CUDA AVANT les autres paquets :
+#
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121
+#   pip install -r requirements.txt -r requirements-voice.txt
+#
+# Puis forcez le GPU dans `.env` :
+#   ISA_STT_DEVICE=cuda
+#   ISA_STT_COMPUTE=float16
+#   ISA_STT_MODEL=medium
+
+faster-whisper>=1.0.0
+numpy>=1.26
+piper-tts>=1.2.0
+transformers>=4.40
+soundfile>=0.12.1
+ctranslate2>=4.0

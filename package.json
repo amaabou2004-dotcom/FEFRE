@@ -10,6 +10,9 @@
     "start": "node dist/server.cjs",
     "lint": "tsc --noEmit",
     "test:ai": "tsx scripts/test-ai-assistant.mts",
+    "test:voice": "tsx scripts/test-voice-brain.mts",
+    "test": "npm run test:ai && npm run test:voice",
+    "voice:server": "cd voice-ai && python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8787",
     "preview": "vite preview"
   },
   "dependencies": {

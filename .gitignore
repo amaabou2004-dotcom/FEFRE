@@ -8,6 +8,20 @@ dist/
 .env.local
 .env.*.local
 
+# ── ISA : serveur IA vocal local (voice-ai/) ─────────────────────────────────
+# Modèles téléchargés (Whisper, Piper, MMS-TTS) : plusieurs Go, jamais dans Git.
+voice-ai/models/
+voice-ai/.venv/
+voice-ai/venv/
+voice-ai/__pycache__/
+voice-ai/**/__pycache__/
+voice-ai/.pytest_cache/
+voice-ai/logs/
+*.onnx
+*.gguf
+# Les fichiers `.onnx.json` de configuration Piper restent ignorés eux aussi :
+# ils sont retéléchargés par scripts/download_models.py.
+
 # Divers
 .DS_Store
 *.log

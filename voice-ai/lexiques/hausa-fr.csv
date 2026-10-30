@@ -1,0 +1,125 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ISA — Lexique haoussa (Hausa)
+# Format : variante_entendue,forme_correcte   (sans en-tête, UTF-8)
+#
+# Whisper transcrit déjà bien le haoussa (code « ha »). Ce lexique sert surtout
+# à normaliser les caractères spéciaux (ɓ ɗ ƙ ʼ) et les orthographes variantes,
+# et à documenter le vocabulaire utilisé par l'assistant.
+#
+# ⚠ À faire relire par des locuteurs natifs (voir README.md).
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Salutations ──────────────────────────────────────────────────────────────
+sannu,sannu
+salam,salam
+yaya kake,yaya kake
+yaya ake,yaya ake
+ina kwana,ina kwana
+barka da zuwa,barka da zuwa
+barka da safe,barka da safe
+barka da rana,barka da rana
+barka da yamma,barka da yamma
+sai an jima,sai an jima
+na gode,na gode
+nagode,nagode
+madalla,madalla
+eh,eh
+a'a,a'a
+a a,a'a
+
+# ── Ordres fréquents ─────────────────────────────────────────────────────────
+kai ni,kai ni
+je ni,je ni
+nuna mini,nuna mini
+nuna min,nuna mini
+nemo,nemo
+nemi,nemi
+kira,kira
+yi kiran,yi kiran
+aika sako,aika sako
+aika sakon,aika sako
+bude,bude
+buɗe,bude
+taimako,taimako
+ka taimake ni,ka taimake ni
+ina son zuwa,ina son zuwa
+zan je,zan je
+maimaita,maimaita
+shiru,shiru
+daina,daina
+tsaya,tsaya
+
+# ── Temps et heure ───────────────────────────────────────────────────────────
+karfe nawa,karfe nawa
+ƙarfe nawa,karfe nawa
+wane lokaci,wane lokaci
+lokaci nawa,lokaci nawa
+yau,yau
+jiya,jiya
+gobe,gobe
+safe,safe
+yamma,yamma
+rana,rana
+wata,wata
+shekara,shekara
+minti,minti
+mintuna,mintuna
+awa,awa
+nakila,nakila
+naƙila,nakila
+agogo,agogo
+tunatarwa,tunatarwa
+
+# ── Lieux et services ────────────────────────────────────────────────────────
+kasuwa,kasuwa
+babbar kasuwa,babbar kasuwa
+asibiti,asibiti
+kantin magani,kantin magani
+makaranta,makaranta
+masallaci,masallaci
+cocin,coci
+banki,banki
+gidan abinci,gidan abinci
+otal,otal
+gida,gida
+ofis,ofisi
+tashar motoci,tashar motoci
+filin jirgi,filin jirgi
+filin wasa,filin wasa
+
+# ── Météo ────────────────────────────────────────────────────────────────────
+yanayi,yanayi
+zafi,zafi
+sanyi,sanyi
+ruwan sama,ruwan sama
+iska,iska
+rarraba,rana
+
+# ── Nombres ──────────────────────────────────────────────────────────────────
+daya,daya
+ɗaya,daya
+biyu,biyu
+uku,uku
+hudu,hudu
+biyar,biyar
+shida,shida
+bakwai,bakwai
+takwas,takwas
+tara,tara
+goma,goma
+ashirin,ashirin
+dari,dari
+
+# ── Noms de lieux : variantes ────────────────────────────────────────────────
+nijar,nijar
+niger,nijar
+niamey,niamey
+zinder,zinder
+maradi,maradi
+tahoua,tahoua
+agadez,agadez
+dosso,dosso
+tillaberi,tillaberi
+diffa,diffa
+kano,kano
+sokoto,sokoto

@@ -1,0 +1,60 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  ISA — Service systemd (démarrage automatique au boot du poste de Niamey)
+#
+#  Installation :
+#      sudo cp voice-ai/deploy/isa-voice.service /etc/systemd/system/
+#      sudo nano /etc/systemd/system/isa-voice.service   # ajustez User/paths
+#      sudo systemctl daemon-reload
+#      sudo systemctl enable --now isa-voice
+#
+#  Suivi des journaux :
+#      journalctl -u isa-voice -f
+# ═══════════════════════════════════════════════════════════════════════════
+
+[Unit]
+Description=ISA - Assistant vocal local du Niger (Excellence Services SARL, Niamey)
+Documentation=file:/opt/isa/voice-ai/README.md
+After=network-online.target
+Wants=network-online.target
+# Décommentez si Ollama est installé comme service sur la même machine :
+# After=ollama.service
+
+[Service]
+Type=simple
+
+# ⚠ À adapter : utilisateur réel et chemin d'installation.
+User=isa
+Group=isa
+WorkingDirectory=/opt/isa/voice-ai
+
+# Environnement : le fichier .env local est lu par l'application elle-même.
+EnvironmentFile=-/opt/isa/voice-ai/.env
+Environment=PYTHONUNBUFFERED=1
+Environment=ISA_HOST=0.0.0.0
+Environment=ISA_PORT=8787
+
+ExecStart=/opt/isa/voice-ai/.venv/bin/python -m uvicorn app.main:app --host 0.0.0.0 --port 8787
+
+Restart=always
+RestartSec=5
+
+# Limites raisonnables pour un poste dédié (Whisper small + MMS-TTS).
+LimitNOFILE=8192
+Nice=0
+# Décommentez pour éviter qu'un pic de transcription ne gèle la machine :
+# CPUQuota=180%
+# MemoryMax=6G
+
+# Durcissement minimal (le serveur n'a pas besoin d'écrire hors de son dossier)
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/opt/isa/voice-ai/models /opt/isa/voice-ai/logs
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=isa-voice
+
+[Install]
+WantedBy=multi-user.target

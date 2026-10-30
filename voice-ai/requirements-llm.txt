@@ -1,0 +1,19 @@
+# ── ISA : cerveau local (questions ouvertes, traduction) ─────────────────────
+# DEUX options, choisissez-en une :
+#
+# OPTION A (recommandée) — Ollama, installation séparée du Python :
+#     Linux :  curl -fsSL https://ollama.com/install.sh | sh
+#     Windows: https://ollama.com/download/windows
+#     Puis :   ollama pull llama3.2:3b     (≈ 2 Go, 8 Go de RAM conseillés)
+#              ollama pull qwen2.5:1.5b    (≈ 1 Go, pour 4 Go de RAM)
+#     Aucun paquet Python requis : ISA parle à Ollama en HTTP (127.0.0.1:11434).
+#
+# OPTION B — llama.cpp compilé + modèle GGUF :
+#     Lancez `llama-server -m qwen2.5-3b-instruct-q4_k_m.gguf --port 8080`
+#     puis réglez ISA_LLAMACPP_URL=http://127.0.0.1:8080 dans `.env`.
+#
+# Sans A ni B, ISA fonctionne toujours : il répond avec ses règles hors-ligne
+# (heure, date, urgences, lieux du Niger, itinéraires, météo, appels…).
+
+# Optionnel : client Python pour interroger Ollama depuis des scripts.
+ollama>=0.3.0

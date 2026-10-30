@@ -8,6 +8,32 @@
   to = "/.netlify/functions/chat"
   status = 200
 
+# ── ISA : assistant vocal du Niger (voix + géographie gratuite) ──────────────
+[[redirects]]
+  from = "/api/voice/stt"
+  to = "/.netlify/functions/voice-stt"
+  status = 200
+
+[[redirects]]
+  from = "/api/voice/think"
+  to = "/.netlify/functions/voice-think"
+  status = 200
+
+[[redirects]]
+  from = "/api/voice/tts"
+  to = "/.netlify/functions/voice-tts"
+  status = 200
+
+[[redirects]]
+  from = "/api/voice/translate"
+  to = "/.netlify/functions/voice-translate"
+  status = 200
+
+[[redirects]]
+  from = "/api/geo/*"
+  to = "/.netlify/functions/geo/:splat"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

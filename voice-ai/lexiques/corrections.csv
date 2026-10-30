@@ -1,0 +1,67 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ISA — Corrections toutes langues (noms de lieux, marques, abréviations)
+# Format : variante_entendue,forme_correcte   (sans en-tête, UTF-8)
+#
+# Utile pour les noms propres que Whisper écrit phonétiquement, quelle que soit
+# la langue parlée. Exemple : « grand marcher » → « grand marche ».
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Niamey : lieux ───────────────────────────────────────────────────────────
+grand marcher,grand marche
+gran marche,grand marche
+petit marcher,petit marche
+kataquo,katako
+dolée,dole
+yantalla,yantala
+koira kano,koira kano
+banizombou,banizoumbou
+lazarette,lazaret
+talladjé,talladje
+gamkallé,gamkalle
+bobiel,bobiel
+lamordé,lamorde
+lamorde hospital,lamorde
+sey ni kountche,seyni kountché
+diori hamani,diori hamani
+abdou moumouni,abdou moumouni
+pont kennedy,pont des martyrs
+noom hotel,noom hotel
+gaweye,gaweye
+
+# ── Villes du Niger ──────────────────────────────────────────────────────────
+tillabéry,tillabéri
+tillabery,tillabéri
+térra,téra
+oualam,ouallam
+filinngué,filingué
+dogon douchi,dogondoutchi
+birni nconni,birni nkonni
+birni nkonni,birni nkonni
+madaouwa,madaoua
+ngigmi,ngigmi
+n guigmi,ngigmi
+maine soroa,maine-soroa
+guidan roumji,guidan roumdji
+
+# ── Sigles et marques ────────────────────────────────────────────────────────
+o s m,osm
+g p s,gps
+watsap,whatsapp
+wattsap,whatsapp
+wassap,whatsapp
+google map,google maps
+google maps niger,google maps
+excellence service,excellence services
+excellence services s a r l,excellence services sarl
+
+# ── Expressions françaises mal transcrites ───────────────────────────────────
+amène moi au,amène-moi au
+conduit moi,conduis-moi
+conduis moi,conduis-moi
+emmène moi,emmène-moi
+ou se trouve,où se trouve
+quel heure,quelle heure
+il est quelle heure,quelle heure est-il
+météo niamey,météo à niamey
+pharmacie de garde,pharmacie de garde
+station essence,station-service

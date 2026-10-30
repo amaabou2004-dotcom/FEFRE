@@ -10,6 +10,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { WhatsAppButton } from './components/WhatsAppButton';
 import { AIAssistantFloatingButton } from './components/AIAssistantFloatingButton';
+import { VoiceAssistantFloatingButton } from './components/voice/VoiceAssistantFloatingButton';
 import { BackToTop } from './components/BackToTop';
 import { CustomCursor } from './components/CustomCursor';
 
@@ -31,6 +32,7 @@ const DevisPage = lazy(() => import('./pages/DevisPage').then((m) => ({ default:
 const AdminPage = lazy(() => import('./pages/AdminPage').then((m) => ({ default: m.AdminPage })));
 const PartnerPortalPage = lazy(() => import('./pages/PartnerPortalPage').then((m) => ({ default: m.PartnerPortalPage })));
 const AIAssistantPage = lazy(() => import('./pages/AIAssistantPage').then((m) => ({ default: m.AIAssistantPage })));
+const VoiceAssistantPage = lazy(() => import('./pages/VoiceAssistantPage').then((m) => ({ default: m.VoiceAssistantPage })));
 const DownloadPage = lazy(() => import('./pages/DownloadPage').then((m) => ({ default: m.DownloadPage })));
 
 const RouteLoadingFallback = () => (
@@ -63,6 +65,15 @@ const AppContent: React.FC = () => {
     return (
       <Suspense fallback={<RouteLoadingFallback />}>
         <AIAssistantPage />
+      </Suspense>
+    );
+  }
+
+  // ISA — Assistant vocal plein écran (Siri-like : zarma / haoussa / français)
+  if (currentPath === '/assistant-vocal' || currentPath === '/vocal' || currentPath === '/isa') {
+    return (
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <VoiceAssistantPage />
       </Suspense>
     );
   }
@@ -154,6 +165,7 @@ const AppContent: React.FC = () => {
       {/* Persistent Floating Actions */}
       <BackToTop />
       <AIAssistantFloatingButton />
+      <VoiceAssistantFloatingButton />
       <WhatsAppButton />
 
       {/* Institutional Footer */}

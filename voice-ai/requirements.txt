@@ -1,0 +1,7 @@
+# ── ISA serveur vocal local : dépendances MINIMALES ──────────────────────────
+# Le serveur démarre avec ceci seulement : API + page d'état + règles hors-ligne
+# + géographie (OSM/Open-Meteo). La voix et le LLM s'ajoutent avec les fichiers
+# requirements-voice.txt / requirements-llm.txt.
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+python-multipart>=0.0.9
