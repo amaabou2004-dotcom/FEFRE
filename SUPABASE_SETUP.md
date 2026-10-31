@@ -159,6 +159,36 @@ emplacement (ex. `hero-main`).
 | Un élément supprimé réapparaît | Ancien déploiement dont l'amorçage réimportait les collections vides | Redéployer la version avec le garde-fou d'initialisation ; vérifier ensuite la table concernée dans Supabase |
 | Bandeau « Temps réel à reconnecter » | WebSocket interrompu ou réseau instable | Attendre la reconnexion automatique ou cliquer sur **Synchroniser** ; le site se resynchronise aussi au retour sur l'onglet et au maximum toutes les 60 secondes |
 
+## Notifications email des devis et messages (automatique)
+
+À chaque nouvelle demande de devis ou nouveau message de contact, un email
+de notification est envoyé automatiquement à l'adresse de l'entreprise.
+
+**Fonctionnement**
+
+1. Le visiteur envoie le formulaire → la ligne est insérée dans `quotes` ou
+   `contact_messages` (comme avant).
+2. Un trigger PostgreSQL (`trg_notify_new_quote` /
+   `trg_notify_new_contact_message`, migration
+   `20261031120000_notify_leads.sql`) appelle via `pg_net` l'Edge Function
+   **`notify-leads`** (`supabase/functions/notify-leads/index.ts`).
+3. L'Edge Function envoie l'email via **Resend** (répondre à l'email reçu
+   répond directement au visiteur grâce au `reply_to`).
+
+**Secrets requis** (jamais dans le code ni dans Git) :
+
+- Edge Functions → Secrets : `RESEND_API_KEY` (clé Resend `re_…`),
+  `NOTIFY_TO_EMAIL` (destinataire), `NOTIFY_FROM_EMAIL` (expéditeur),
+  `NOTIFY_WEBHOOK_SECRET` (secret aléatoire partagé).
+- Vault : `notify_leads_url` (URL de la fonction) et `notify_leads_secret`
+  (= même valeur que `NOTIFY_WEBHOOK_SECRET`).
+
+**Important — compte Resend gratuit** : sans domaine vérifié, Resend
+n'envoie qu'à l'adresse email du propriétaire du compte Resend. Le compte
+Resend doit donc être créé avec l'adresse qui doit recevoir les
+notifications (ou vérifier le domaine dans Resend → Domains, ce qui permet
+ensuite d'envoyer depuis le domaine vers n'importe quelle adresse).
+
 ## Ce qui a changé dans le code
 
 - `src/lib/supabase.ts` : client Supabase avec configuration publique officielle
