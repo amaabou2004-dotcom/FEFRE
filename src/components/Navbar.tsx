@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, ChevronDown, Sparkles, ArrowRight, Bot } from 'lucide-react';
+import { Menu, ChevronDown, Sparkles, ArrowRight, Bot, Mic } from 'lucide-react';
 import { Link, useRouter } from '../lib/router';
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
@@ -276,6 +276,20 @@ export const Navbar: React.FC<NavbarProps> = ({ theme, onToggleTheme }) => {
               >
                 <Bot className="w-3.5 h-3.5 text-[#01184C] dark:text-[#D4AF37]" />
                 <span>{t('nav.consult_ai', 'Assistant IA')}</span>
+              </motion.button>
+
+              {/* ISA — assistant vocal (zarma / haoussa / français), façon Siri */}
+              <motion.button
+                type="button"
+                id="navbar-open-voice-desktop"
+                onClick={() => navigate('/assistant-vocal')}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.96 }}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#01184C] hover:bg-[#0A2254] dark:bg-[#D4AF37] dark:hover:bg-[#E5C358] text-white dark:text-[#01184C] border border-[#01184C] dark:border-[#D4AF37] text-xs font-bold transition-all shadow-xs cursor-pointer"
+                title={isEnglish ? 'ISA voice assistant — Zarma, Hausa, French' : 'Assistant vocal ISA — zarma, haoussa, français'}
+              >
+                <Mic className="w-3.5 h-3.5" />
+                <span>{isEnglish ? 'Voice ISA' : 'Assistant vocal'}</span>
               </motion.button>
 
               <motion.button

@@ -1,0 +1,20 @@
+# ── ISA : voix (reconnaissance + synthèse) ───────────────────────────────────
+# À installer sur la machine de Niamey qui sert de serveur vocal.
+#
+#   pip install -r requirements.txt -r requirements-voice.txt
+#
+# Poids total téléchargé : ~1,5 Go (dont ~800 Mo pour torch, nécessaire aux
+# voix zarma/haoussa MMS-TTS). Une fois installé, TOUT fonctionne hors-ligne.
+
+# Reconnaissance vocale (français, haoussa, zarma en détection automatique)
+faster-whisper>=1.0.0
+numpy>=1.26
+
+# Voix française / anglaise (rapide sur CPU, ~60 Mo par voix)
+piper-tts>=1.2.0
+
+# Voix zarma (facebook/mms-tts-dje) et haoussa (facebook/mms-tts-hau)
+# torch en version CPU suffit ; voir requirements-voice-gpu.txt pour CUDA.
+torch>=2.2
+transformers>=4.40
+soundfile>=0.12.1

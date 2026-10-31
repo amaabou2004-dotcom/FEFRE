@@ -1,0 +1,57 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#  ISA — Serveur vocal local (docker compose)
+#
+#  Démarrage :
+#      docker compose -f voice-ai/docker-compose.yml up -d --build
+#
+#  Puis, depuis n'importe quel téléphone du même réseau :
+#      http://ADRESSE_IP_DU_POSTE:8787/
+#
+#  Brancher le site web :
+#      https://votre-site/assistant-vocal?isaServer=http://ADRESSE_IP:8787
+# ═══════════════════════════════════════════════════════════════════════════
+
+services:
+  isa-voice:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # « base » = API + règles hors-ligne + géographie (léger, ~250 Mo)
+      # « full » = + Whisper + voix Piper/MMS zarma & haoussa (~3 Go)
+      target: full
+    image: isa-voice:latest
+    container_name: isa-voice
+    restart: unless-stopped
+    ports:
+      - "8787:8787"
+    volumes:
+      # Les modèles survivent aux mises à jour de l'image.
+      - isa-models:/app/models
+      - ./.env:/app/.env:ro
+    environment:
+      ISA_HOST: "0.0.0.0"
+      ISA_PORT: "8787"
+      ISA_CORS_ORIGINS: "*"
+      ISA_STT_MODEL: "small"
+      # Si Ollama tourne sur la machine hôte, le conteneur l'atteint ainsi :
+      ISA_OLLAMA_URL: "http://host.docker.internal:11434"
+    extra_hosts:
+      # Nécessaire sous Linux pour joindre Ollama installé sur l'hôte.
+      - "host.docker.internal:host-gateway"
+    # Décommentez si la machine a un GPU NVIDIA (Whisper 3-5× plus rapide) :
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: all
+    #           capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8787/health', timeout=5)"]
+      interval: 30s
+      timeout: 8s
+      retries: 3
+      start_period: 30s
+
+volumes:
+  isa-models:

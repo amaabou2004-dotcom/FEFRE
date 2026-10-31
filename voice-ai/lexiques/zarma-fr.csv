@@ -1,0 +1,116 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# ISA — Lexique zarma (Zarmaciine)
+# Format : variante_entendue,forme_correcte   (sans en-tête, UTF-8)
+#
+# Deux usages :
+#   1. corriger la transcription de Whisper (le zarma n'est pas une langue
+#      d'entraînement de Whisper : il écrit phonétiquement, souvent en coupant
+#      les mots) ;
+#   2. servir de vocabulaire de référence pour l'équipe et les tests.
+#
+# ⚠ À faire relire et compléter par des locuteurs natifs (voir README.md).
+#   Les lignes ci-dessous proviennent de salutations et d'ordres attestés ;
+#   elles constituent un socle, pas une grammaire complète.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Salutations attestées ────────────────────────────────────────────────────
+fofo,fofo
+mate ni go,mate ni go
+ma te ni go,mate ni go
+mate aran go,mate aran go
+baani samay,baani samay
+baa ni samay,baani samay
+fonda kayan,fonda kayan
+ngoyya,ngoyya
+ngoya,ngoyya
+ayyo,ayyo
+kala,kala
+kala nda tonton,kala nda tonton
+kala suba,kala suba
+iri ma kani bani,iri ma kani bani
+mate goyo,mate goyo
+mate fu,mate fu
+mate ni ma,mate ni ma
+ay saabu,ay saabu
+
+# ── Ordres fréquents (à valider avec un locuteur) ────────────────────────────
+ma ay ne koy,ma ay ne koy
+ay ma koy,ay ma koy
+ma ay cebe,ma ay cebe
+ma ay faaba,ma ay faaba
+ay ga ba,ay ga ba
+ay go ba,ay ga ba
+ma sanni,ma sanni
+dabba,dabba
+
+# ── Mots-outils ──────────────────────────────────────────────────────────────
+man hare,man hare
+mar no,mar no
+waati cendi,waati cendi
+hunkuna,hunkuna
+suba,suba
+bi,bi
+zaari,zaari
+handu,handu
+wayna,wayna
+hari,hari
+fu,fu
+laabo,laabo
+kwaara,kwaara
+boro,boro
+izey,izey
+goy,goy
+sanni,sanni
+hã,hã
+ceeci,ceeci
+du,du
+nangu,nangu
+moora,moora
+kaari,kaari
+hargu,hargu
+dungay,dungay
+telefon,telefon
+nooru,nooru
+albarka,albarka
+
+# ── Nombres (utiles pour minuteurs et heures) ────────────────────────────────
+ida,ida
+hinka,hinka
+ihinza,ihinza
+taaci,taaci
+gu,gu
+iddu,iddu
+iyye,iyye
+yaahakku,yaahakku
+yegga,yegga
+way,way
+bire,bire
+kabu,kabu
+
+# ── Noms de lieux : variantes courantes ──────────────────────────────────────
+niame,niamey
+nyamey,niamey
+zindé,zinder
+zindi,zinder
+tahoua,tahoua
+maradi,maradi
+agades,agadez
+dosso,dosso
+tillabery,tillaberi
+téra,tera
+ayorou,ayorou
+ouallam,ouallam
+filingue,filingue
+gaya,gaya
+konni,birni nkonni
+dogon doutchi,dogondoutchi
+madaoua,madaoua
+
+# ── Emprunts au français fréquents à Niamey ──────────────────────────────────
+marché,marche
+hôpital,hopital
+pharmacie,pharmacie
+école,ecole
+mosquée,mosquee
+essence,essence
+banque,banque
