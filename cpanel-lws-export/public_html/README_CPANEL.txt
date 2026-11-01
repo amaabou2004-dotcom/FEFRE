@@ -1,5 +1,5 @@
 EXCELLENCE SERVICES SARL — PACKAGE cPanel LWS STATIQUE
-Généré le 2026-10-30
+Généré le 2026-11-01
 
 1. Extrayez tout le contenu directement dans /public_html (sans dossier intermédiaire).
 2. Vérifiez que /public_html/index.html, /public_html/assets/ et /public_html/.htaccess existent.
