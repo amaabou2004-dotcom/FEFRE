@@ -13,9 +13,9 @@ export const AboutPreview: React.FC = () => {
   const { t, isEnglish } = useLanguage();
 
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAFD] dark:bg-[#030F26] transition-colors duration-300 relative overflow-hidden">
+    <section className="py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#071A42] border-y border-[#E7EDF5] dark:border-white/10 transition-colors duration-300 relative overflow-hidden">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-center">
           {/* Left Column: Image Card */}
           <motion.div
             initial={{ opacity: 0, x: -25 }}
@@ -71,7 +71,7 @@ export const AboutPreview: React.FC = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: '-50px' }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="lg:col-span-6 order-1 lg:order-2 space-y-6"
+            className="lg:col-span-6 order-1 lg:order-2 space-y-7"
           >
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
@@ -86,8 +86,8 @@ export const AboutPreview: React.FC = () => {
                 : settings.aboutText}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#0A2254]/50 border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/50 transition-colors shadow-xs">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 pt-2">
+              <div className="p-5 rounded-2xl bg-[#F8FAFD] dark:bg-[#0A2254]/50 border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/50 transition-colors shadow-xs">
                 <Users className="w-5 h-5 text-[#D4AF37] mb-2" />
                 <h4 className="text-sm font-bold text-[#0E1D38] dark:text-white">
                   {isEnglish ? 'Human Expertise' : 'Expertise Humaine'}
@@ -99,7 +99,7 @@ export const AboutPreview: React.FC = () => {
                 </p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white dark:bg-[#0A2254]/50 border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/50 transition-colors shadow-xs">
+              <div className="p-5 rounded-2xl bg-[#F8FAFD] dark:bg-[#0A2254]/50 border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/50 transition-colors shadow-xs">
                 <ShieldCheck className="w-5 h-5 text-[#D4AF37] mb-2" />
                 <h4 className="text-sm font-bold text-[#0E1D38] dark:text-white">
                   {isEnglish ? 'Full Compliance' : 'Conformité Totale'}
@@ -112,7 +112,7 @@ export const AboutPreview: React.FC = () => {
               </div>
             </div>
 
-            <div className="pt-2 flex items-center gap-4">
+            <div className="pt-3 flex items-center gap-4">
               <motion.button
                 onClick={() => navigate('/a-propos')}
                 whileHover={{ scale: 1.02 }}

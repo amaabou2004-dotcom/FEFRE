@@ -20,20 +20,20 @@ export const PartnersSection: React.FC = () => {
   return (
     <section
       id="partenaires"
-      className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300 relative"
+      className="py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300 relative"
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-3.5 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 lg:mb-14 gap-6">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-5 shadow-sm">
               <Handshake className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="uppercase tracking-wider text-[11px]">{t('partners.badge', 'Alliances Stratégiques & Écosystème')}</span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-tight text-balance">
+            <h2 className="font-display text-[1.75rem] sm:text-4xl lg:text-[2.5rem] font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-[1.14] text-balance">
               {t('partners.title', 'Des synergies pérennes avec les acteurs de référence.')}
             </h2>
-            <p className="mt-2.5 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed text-pretty">
+            <p className="mt-4 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed text-pretty">
               {t(
                 'partners.desc',
                 "Opérateurs télécoms, éditeurs CRM, intégrateurs et institutions : découvrez les organisations qui enrichissent notre dynamique d'excellence."

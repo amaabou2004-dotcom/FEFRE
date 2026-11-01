@@ -44,18 +44,18 @@ export const QuickContactSection: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="pt-20 pb-28 sm:pb-24 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300">
+    <section id="contact" className="pt-24 lg:pt-28 pb-32 lg:pb-36 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-3.5 shadow-sm">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 lg:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-5 shadow-sm">
             <MessageSquare className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span className="uppercase tracking-wider text-[11px]">{t('contact.badge', 'Échanges Directs & Localisation')}</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-tight text-balance">
+          <h2 className="font-display text-[1.75rem] sm:text-4xl lg:text-[2.5rem] font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-[1.14] text-balance">
             {t('contact.title', 'Parlons de vos objectifs et de vos besoins opérationnels.')}
           </h2>
-          <p className="mt-2.5 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed max-w-2xl mx-auto text-pretty">
+          <p className="mt-4 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed max-w-2xl mx-auto text-pretty">
             {t(
               'contact.desc',
               "Nos directeurs de mission et consultants à Niamey sont à votre écoute pour évaluer vos projets et vous transmettre une proposition d'accompagnement sur mesure."
@@ -64,9 +64,9 @@ export const QuickContactSection: React.FC = () => {
         </div>
 
         {/* 2-Columns Grid: Left = Info & Map, Right = Simple Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
           {/* Left Column: Direct channels & Map */}
-          <div className="lg:col-span-6 space-y-6">
+          <div className="lg:col-span-6 space-y-8">
             {/* Quick Contact Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Phone */}
@@ -157,7 +157,7 @@ export const QuickContactSection: React.FC = () => {
           </div>
 
           {/* Right Column: Direct WhatsApp + Socials + Quick Message Form */}
-          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-[#F8FAFD] dark:bg-[#07193F] border border-[#DDE4EE] dark:border-[#1B3E82]/70 shadow-sm space-y-6">
+          <div className="lg:col-span-6 p-6 sm:p-8 rounded-3xl bg-[#F8FAFD] dark:bg-[#07193F] border border-[#DDE4EE] dark:border-[#1B3E82]/70 shadow-sm space-y-8">
             {/* Direct WhatsApp CTA */}
             <div>
               <div className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.15em] text-slate-500 dark:text-slate-400 mb-2.5">
@@ -215,7 +215,7 @@ export const QuickContactSection: React.FC = () => {
                 </button>
               </motion.div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div>
                   <label htmlFor="quick-name" className="block text-xs font-bold text-[#0E1D38] dark:text-slate-200 mb-1.5">
                     {t('contact.name_placeholder', 'Votre nom complet *')}

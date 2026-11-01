@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 lg:pt-40 pb-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F2F6FC] via-white to-[#F8FAFD] dark:bg-[#01184C] dark:from-[#01184C] dark:via-[#01184C] dark:to-[#01184C] text-[#0E1D38] dark:text-white overflow-hidden transition-colors duration-300">
+    <section className="relative min-h-[85vh] flex items-center justify-center pt-32 sm:pt-36 lg:pt-40 pb-20 lg:pb-24 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F2F6FC] via-white to-[#F8FAFD] dark:bg-[#01184C] dark:from-[#01184C] dark:via-[#01184C] dark:to-[#01184C] text-[#0E1D38] dark:text-white overflow-hidden transition-colors duration-300">
       {/* Background Gradients */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-[-10%] right-[-10%] w-[550px] h-[550px] bg-[#D4AF37]/15 dark:bg-[#D4AF37]/20 blur-[130px] rounded-full" />
@@ -43,9 +43,9 @@ export const Hero: React.FC = () => {
       </div>
 
       <div className="max-w-7xl mx-auto w-full relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 lg:gap-20 items-center">
           {/* Left Column: Direct and Clear Text */}
-          <div className="lg:col-span-7 text-center lg:text-left space-y-6">
+          <div className="lg:col-span-7 text-center lg:text-left space-y-8">
             {/* Badges */}
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -100,7 +100,7 @@ export const Hero: React.FC = () => {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45, delay: 0.3 }}
-              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2"
+              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3.5 pt-3"
             >
               <button
                 type="button"

@@ -261,7 +261,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
       onBlurCapture={handleBlurCapture}
     >
       {showControls && (
-        <div className="flex items-center justify-between gap-3 mb-3 px-1">
+        <div className="flex items-center justify-between gap-3 mb-5 px-1">
           <div className="flex min-h-10 items-center">
             {autoScroll && (
               <span className="inline-flex items-center gap-2 rounded-full border border-[#DDE4EE] dark:border-white/10 bg-white/80 dark:bg-[#0A2254]/70 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-[#01184C] dark:text-[#D4AF37]">
@@ -363,7 +363,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
             delayAutoplay();
           }
         }}
-        className={`carousel-track no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto overscroll-x-contain scroll-pl-1 py-2 px-1 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 ${
+        className={`carousel-track no-scrollbar flex items-stretch gap-4 sm:gap-6 overflow-x-auto overscroll-x-contain scroll-pl-1 py-4 px-1 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37]/50 ${
           autoScroll ? 'snap-none' : 'snap-x snap-proximity [&>*]:snap-start'
         }`}
       >
@@ -371,7 +371,7 @@ export const HorizontalCarousel: React.FC<HorizontalCarouselProps> = ({
       </div>
 
       {showHint && (canScrollLeft || canScrollRight) && (
-        <div className="flex sm:hidden items-center justify-between mt-2 px-2 text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+        <div className="flex sm:hidden items-center justify-between mt-4 px-2 text-[11px] text-slate-400 dark:text-slate-500 font-medium">
           <span>
             {autoScroll
               ? userPaused

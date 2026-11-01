@@ -38,21 +38,21 @@ export const RealisationsSection: React.FC<RealisationsSectionProps> = ({
     <section
       id="realisations"
       className={`${
-        isStandalonePage ? 'py-16' : 'py-20'
+        isStandalonePage ? 'py-20' : 'py-24 lg:py-28'
       } px-4 sm:px-6 lg:px-8 bg-[#F8FAFD] dark:bg-[#030F26] transition-colors duration-300 relative`}
     >
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-3.5 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 lg:mb-14 gap-6">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-5 shadow-sm">
               <CheckCircle2 className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="uppercase tracking-wider text-[11px]">{t('portfolio.badge', 'Études de Cas & Déploiements')}</span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-tight text-balance">
+            <h2 className="font-display text-[1.75rem] sm:text-4xl lg:text-[2.5rem] font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-[1.14] text-balance">
               {t('portfolio.title', 'Des réalisations concrètes qui attestent de notre niveau d\'exigence.')}
             </h2>
-            <p className="mt-2.5 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed text-pretty">
+            <p className="mt-4 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed text-pretty">
               {t(
                 'portfolio.desc',
                 "Faites défiler pour explorer les projets menés avec succès : déploiements de centres d'appels, intégrations CRM et solutions digitales à Niamey."
@@ -74,7 +74,7 @@ export const RealisationsSection: React.FC<RealisationsSectionProps> = ({
 
         {/* Category filter on standalone page */}
         {isStandalonePage && (
-          <div className="flex flex-wrap items-center gap-2 mb-8">
+          <div className="flex flex-wrap items-center gap-2.5 mb-10">
             {categories.map((cat) => (
               <button
                 key={cat}
