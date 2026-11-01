@@ -162,7 +162,8 @@ emplacement (ex. `hero-main`).
 ## Notifications email des devis et messages (automatique)
 
 À chaque nouvelle demande de devis ou nouveau message de contact, un email
-de notification est envoyé automatiquement à l'adresse de l'entreprise.
+de notification est envoyé automatiquement à `oussouben6@gmail.com`
+(adresse du compte Resend — voir la configuration active plus bas).
 
 **Fonctionnement**
 
@@ -188,6 +189,42 @@ n'envoie qu'à l'adresse email du propriétaire du compte Resend. Le compte
 Resend doit donc être créé avec l'adresse qui doit recevoir les
 notifications (ou vérifier le domaine dans Resend → Domains, ce qui permet
 ensuite d'envoyer depuis le domaine vers n'importe quelle adresse).
+
+### Configuration active (vérifiée le 1er novembre 2026)
+
+| Élément | Valeur |
+|---|---|
+| Clé Resend | clé de l'API Resend, **restreinte à l'envoi d'emails** (compte `oussouben6@gmail.com`) |
+| `NOTIFY_TO_EMAIL` | `oussouben6@gmail.com` — adresse qui reçoit les devis **et** les messages de contact |
+| `NOTIFY_FROM_EMAIL` | `Excellence Services SARL <onboarding@resend.dev>` |
+| Domaine vérifié | aucun (offre gratuite) |
+
+Un domaine n'étant pas encore vérifié dans Resend, Resend refuse toute
+adresse de destination autre que celle du titulaire du compte
+(`403 validation_error: You can only send testing emails to your own email
+address`). C'est pour cela que `NOTIFY_TO_EMAIL` pointe sur
+`oussouben6@gmail.com` : les devis arrivent donc réellement.
+
+Tests de bout en bout effectués (insertion réelle → trigger → Edge Function
+→ Resend) : **devis** ✅ et **message de contact** ✅, tous deux acceptés par
+Resend (HTTP 200). Les lignes de test ont été supprimées ensuite.
+
+**Pour envoyer plus tard vers `admin@excellence-services-sarl.com`**
+(ou toute autre adresse) :
+
+1. Resend → **Domains** → *Add domain* → `excellence-services-sarl.com`,
+   puis ajouter les enregistrements DNS (SPF, DKIM, DMARC) chez le
+   gestionnaire du domaine ; attendre la validation.
+2. Dans Supabase → Edge Functions → Secrets :
+   - `NOTIFY_TO_EMAIL` = `admin@excellence-services-sarl.com`
+     (ou plusieurs adresses séparées par des virgules, après adaptation de
+     la fonction) ;
+   - `NOTIFY_FROM_EMAIL` = `Excellence Services SARL <devis@excellence-services-sarl.com>`
+     (adresse **du domaine vérifié**, sinon Resend refuse l'envoi).
+3. Envoyer un devis de test pour vérifier la réception.
+
+⚠️ La clé Resend ne doit **jamais** être commitée : elle vit uniquement dans
+Supabase → Edge Functions → Secrets.
 
 ## Ce qui a changé dans le code
 
