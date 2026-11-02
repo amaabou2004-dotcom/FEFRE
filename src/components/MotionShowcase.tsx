@@ -105,7 +105,7 @@ export const MotionShowcase: React.FC = () => {
   return (
     <section
       aria-label={t('motion.title', 'Nos prestations en mouvement')}
-      className="relative mt-14 overflow-hidden border-y border-[#D4AF37]/25 bg-[#01184C] py-10 text-white sm:py-12"
+      className="relative mt-16 sm:mt-20 overflow-hidden border-y border-[#D4AF37]/25 bg-[#01184C] py-14 text-white sm:py-16 lg:py-20"
     >
       {/* Halos décoratifs, sans impact sur la mise en page */}
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
@@ -159,7 +159,7 @@ export const MotionShowcase: React.FC = () => {
         {activeSectors.map((sector) => sector.name).join(', ')}.
       </p>
 
-      <div className="relative mt-8 space-y-5" aria-hidden="true">
+      <div className="relative mt-10 space-y-7" aria-hidden="true">
         <div>
           <p className="mx-auto mb-3 max-w-7xl px-4 text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#D4AF37]/80 sm:px-6 lg:px-8">
             {t('motion.services_label', 'Prestations')}

@@ -1,6 +1,6 @@
 # Guide Officiel de Déploiement sur cPanel LWS — Excellence Services SARL
 
-Package généré le 2026-10-30 avec **Supabase déjà configuré**.
+Package généré le 2026-11-01 avec **Supabase déjà configuré**.
 
 Ce dossier contient les fichiers de production prêts à être hébergés chez **LWS (Ligne Web Services)** sur un hébergement **cPanel**.
 

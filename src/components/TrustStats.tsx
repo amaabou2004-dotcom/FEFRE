@@ -39,7 +39,7 @@ export const TrustStats: React.FC = () => {
 
   return (
     <section className="relative z-20 -mt-10 sm:-mt-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
         {stats.map((stat, idx) => {
           const Icon = stat.icon;
           return (
@@ -49,7 +49,7 @@ export const TrustStats: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-20px' }}
               transition={{ duration: 0.35, delay: idx * 0.08 }}
-              className="p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/60 dark:hover:border-[#D4AF37]/60 shadow-lg shadow-black/5 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
+              className="p-5 sm:p-6 rounded-3xl bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-white/10 hover:border-[#D4AF37]/60 dark:hover:border-[#D4AF37]/60 shadow-lg shadow-black/5 hover:shadow-xl transition-all duration-300 group flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="font-display text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#01184C] dark:text-[#D4AF37] tabular-nums tracking-[-0.03em] leading-none">
@@ -63,7 +63,7 @@ export const TrustStats: React.FC = () => {
                 <p className="text-xs sm:text-sm font-bold text-[#0E1D38] dark:text-white leading-snug">
                   {stat.label}
                 </p>
-                <p className="text-[11px] sm:text-xs text-[#536582] dark:text-slate-300 mt-1 leading-normal line-clamp-1">
+                <p className="text-[11px] sm:text-xs text-[#536582] dark:text-slate-300 mt-1.5 leading-relaxed">
                   {stat.sub}
                 </p>
               </div>

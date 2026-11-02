@@ -1,6 +1,6 @@
 # Excellence Services SARL — Package Node.js cPanel LWS
 
-Généré le 2026-10-30. **Supabase est déjà configuré** (projet `jwmgrsoxzkgpviglrrwm`) : ne créez pas de base MySQL, n'importez aucun SQL et ne saisissez aucune variable Supabase sur LWS.
+Généré le 2026-11-01. **Supabase est déjà configuré** (projet `jwmgrsoxzkgpviglrrwm`) : ne créez pas de base MySQL, n'importez aucun SQL et ne saisissez aucune variable Supabase sur LWS.
 
 ## Installation rapide
 

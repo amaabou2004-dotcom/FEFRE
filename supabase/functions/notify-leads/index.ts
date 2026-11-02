@@ -5,7 +5,8 @@
 //
 // Secrets Edge Function (Supabase → Edge Functions → Secrets) :
 //   RESEND_API_KEY        Clé API Resend (commence par « re_ »)
-//   NOTIFY_TO_EMAIL       Destinataire des notifications
+//   NOTIFY_TO_EMAIL       Destinataire(s) des notifications — plusieurs
+//                         adresses possibles, séparées par des virgules
 //   NOTIFY_FROM_EMAIL     Expéditeur affiché
 //   NOTIFY_WEBHOOK_SECRET Secret partagé avec le trigger SQL (en-tête x-webhook-secret)
 //
@@ -13,8 +14,12 @@
 //   { "table": "quotes" | "contact_messages", "record": { ...ligne insérée... } }
 
 const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") || "";
-const NOTIFY_TO =
-  Deno.env.get("NOTIFY_TO_EMAIL") || "admin@excellence-services-sarl.com";
+// Une ou plusieurs adresses, séparées par des virgules.
+const NOTIFY_TO = (Deno.env.get("NOTIFY_TO_EMAIL") ||
+  "admin@excellence-services-sarl.com")
+  .split(",")
+  .map((addr: string) => addr.trim())
+  .filter(Boolean);
 const NOTIFY_FROM =
   Deno.env.get("NOTIFY_FROM_EMAIL") ||
   "Excellence Services SARL <onboarding@resend.dev>";
@@ -183,7 +188,7 @@ Deno.serve(async (req: Request) => {
     },
     body: JSON.stringify({
       from: NOTIFY_FROM,
-      to: [NOTIFY_TO],
+      to: NOTIFY_TO,
       subject: mail.subject,
       html: mail.html,
       text: mail.text,

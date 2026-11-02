@@ -88,7 +88,7 @@ export const RecognitionCertificateSection: React.FC<RecognitionCertificateSecti
       className={
         embedded
           ? 'relative'
-          : 'relative py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] border-y border-[#DDE4EE] dark:border-white/10 transition-colors duration-300 overflow-hidden'
+          : 'relative py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#F8FAFD] dark:bg-[#071A42] border-y border-[#DDE4EE] dark:border-white/10 transition-colors duration-300 overflow-hidden'
       }
     >
       {!embedded && (
@@ -109,7 +109,7 @@ export const RecognitionCertificateSection: React.FC<RecognitionCertificateSecti
           <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-[#01184C] via-[#D4AF37] to-[#01184C]" />
           <Award className="pointer-events-none absolute -right-8 -top-8 w-48 h-48 text-[#D4AF37]/8 dark:text-[#D4AF37]/10 rotate-12" />
 
-          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-9 lg:gap-12 items-center p-6 sm:p-9 lg:p-11">
+          <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center p-6 sm:p-10 lg:p-14">
             {/* Texte de présentation */}
             <div className="lg:col-span-5 space-y-6">
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#01184C] dark:bg-[#D4AF37] text-[#D4AF37] dark:text-[#01184C] shadow-sm">

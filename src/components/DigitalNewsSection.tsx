@@ -48,20 +48,20 @@ export const DigitalNewsSection: React.FC = () => {
   };
 
   return (
-    <section id="actualites-digitales" className="py-20 sm:py-24 px-4 sm:px-6 lg:px-8 bg-[#F8FAFD] dark:bg-[#01184C]/50 relative transition-colors duration-300">
+    <section id="actualites-digitales" className="py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-[#F8FAFD] dark:bg-[#01184C]/50 relative transition-colors duration-300">
       {/* Subtle ambient lighting */}
       <div className="absolute top-1/2 left-0 w-72 h-72 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none -translate-y-1/2" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-[#0A2254]/20 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="max-w-2xl space-y-3">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 lg:mb-14 gap-6">
+          <div className="max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] shadow-sm">
               <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
               <span className="uppercase tracking-wider text-[11px]">{t('news.badge', 'Veille & Perspectives')}</span>
             </div>
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-tight text-balance">
+            <h2 className="font-display text-[1.75rem] sm:text-4xl lg:text-[2.5rem] font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-[1.14] text-balance">
               {t('news.title', 'Actualités Digitales')}
             </h2>
             <p className="text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed text-pretty">
@@ -83,7 +83,7 @@ export const DigitalNewsSection: React.FC = () => {
         </div>
 
         {/* 3 Modern Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 lg:gap-8 items-stretch">
           {latestArticles.map((article, idx) => (
             <motion.article
               key={article.id}

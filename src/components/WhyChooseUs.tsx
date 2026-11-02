@@ -59,18 +59,18 @@ export const WhyChooseUs: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300 relative">
+    <section className="py-24 lg:py-28 px-4 sm:px-6 lg:px-8 bg-white dark:bg-[#01184C] transition-colors duration-300 relative">
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-14">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-3.5 shadow-sm">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 lg:mb-14">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEF2F8] dark:bg-[#0A2254] border border-[#DDE4EE] dark:border-[#D4AF37]/30 text-xs font-semibold text-[#01184C] dark:text-[#D4AF37] mb-5 shadow-sm">
             <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37]" />
             <span className="uppercase tracking-wider text-[11px]">{t('why.badge', 'Pourquoi Nous Choisir')}</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-tight text-balance">
+          <h2 className="font-display text-[1.75rem] sm:text-4xl lg:text-[2.5rem] font-extrabold text-[#0E1D38] dark:text-white tracking-[-0.03em] leading-[1.14] text-balance">
             {t('why.title', '4 atouts majeurs pour votre réussite opérationnelle')}
           </h2>
-          <p className="mt-3 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed max-w-2xl mx-auto text-pretty">
+          <p className="mt-4 text-sm sm:text-base text-[#475569] dark:text-slate-300 leading-relaxed max-w-2xl mx-auto text-pretty">
             {t(
               'why.subtitle',
               "Nous allions encadrement humain d'élite, infrastructure technologique sécurisée à Niamey et engagement contractuel sans faille."
@@ -79,7 +79,7 @@ export const WhyChooseUs: React.FC = () => {
         </div>
 
         {/* 4 Cards Grid - Simple, Clean, Scannable */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
           {advantages.map((adv, idx) => {
             const Icon = adv.icon;
             return (
@@ -116,7 +116,7 @@ export const WhyChooseUs: React.FC = () => {
         </div>
 
         {/* Clean Center Action */}
-        <div className="mt-12 text-center">
+        <div className="mt-12 lg:mt-14 text-center">
           <button
             type="button"
             onClick={() => navigate('/a-propos')}
